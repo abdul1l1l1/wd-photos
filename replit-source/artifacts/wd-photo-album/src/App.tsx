@@ -3,8 +3,8 @@ import { QueryClient, QueryClientProvider, useQueryClient } from '@tanstack/reac
 import { ErrorBoundary } from '@/components/error-boundary';
 import { Toaster } from '@/components/ui/toaster';
 import { TooltipProvider } from '@/components/ui/tooltip';
-import { ImagePlus, Pencil, RotateCcw, Upload, X } from 'lucide-react';
-import { Route, Switch, useLocation, Router as WouterRouter, Link } from 'wouter';
+import { ImagePlus, Pencil, RotateCcw, Upload, X, ArrowLeft } from 'lucide-react';
+import { Route, Switch, useLocation, useParams, Router as WouterRouter, Link } from 'wouter';
 import NotFound from '@/pages/not-found';
 
 import { useGetAlbum, useSyncAlbum, getGetAlbumQueryKey } from '@workspace/api-client-react';
@@ -12,7 +12,7 @@ import { ClerkProvider, SignIn, SignUp, useUser, useClerk, ClerkLoaded } from '@
 import { publishableKeyFromHost } from '@clerk/react/internal';
 import { dark } from '@clerk/themes';
 
-type Photo = { id: number; src: string; caption: string };
+type Photo = { id: number; src: string; caption: string; description: string };
 type Album = { title: string; photos: Photo[] };
 
 const STORAGE_KEY = 'wd-photo-album-v1';
@@ -20,15 +20,15 @@ const STORAGE_DIRTY_KEY = 'wd-photo-album-unsynced';
 const starterAlbum: Album = {
   title: 'WD Photo',
   photos: [
-    { id: 1, src: '/images/photo-01.jpg', caption: 'After the rain' },
-    { id: 2, src: '/images/photo-02.jpg', caption: 'Quiet geometry' },
-    { id: 3, src: '/images/photo-03.jpg', caption: 'Looking up' },
-    { id: 4, src: '/images/photo-04.jpg', caption: 'Soft repetition' },
-    { id: 5, src: '/images/photo-05.jpg', caption: 'Under the bridge' },
-    { id: 6, src: '/images/photo-06.jpg', caption: 'Open to sky' },
-    { id: 7, src: '/images/photo-07.jpg', caption: 'Lantern hour' },
-    { id: 8, src: '/images/photo-08.jpg', caption: 'Hard light' },
-    { id: 9, src: '/images/photo-09.jpg', caption: 'Edge of water' },
+    { id: 1, src: '/images/photo-01.jpg', caption: 'After the rain', description: 'The streets glistening under the streetlights, reflecting a world washed clean.' },
+    { id: 2, src: '/images/photo-02.jpg', caption: 'Quiet geometry', description: 'Lines intersecting in silence, forming shapes that go unnoticed until now.' },
+    { id: 3, src: '/images/photo-03.jpg', caption: 'Looking up', description: 'A perspective from the ground, capturing the towering structures that define the skyline.' },
+    { id: 4, src: '/images/photo-04.jpg', caption: 'Soft repetition', description: 'Patterns repeating endlessly, creating a rhythm that soothes the eyes.' },
+    { id: 5, src: '/images/photo-05.jpg', caption: 'Under the bridge', description: 'Shadows cast long and deep, hiding secrets beneath concrete and steel.' },
+    { id: 6, src: '/images/photo-06.jpg', caption: 'Open to sky', description: 'A rare clearing where the clouds gather, uninterrupted by the city below.' },
+    { id: 7, src: '/images/photo-07.jpg', caption: 'Lantern hour', description: 'Dusk settling in, warm glow illuminating the evening as the day winds down.' },
+    { id: 8, src: '/images/photo-08.jpg', caption: 'Hard light', description: 'Sharp contrasts created by the unforgiving midday sun, highlighting every detail.' },
+    { id: 9, src: '/images/photo-09.jpg', caption: 'Edge of water', description: 'Where the land meets the calm surface, reflecting the sky in a perfect mirror.' },
   ],
 };
 
@@ -39,7 +39,15 @@ function readAlbum(): Album {
     if (!stored) return starterAlbum;
     const parsed = JSON.parse(stored) as Album;
     if (!parsed?.title || !Array.isArray(parsed.photos) || parsed.photos.length !== 9) return starterAlbum;
-    return parsed;
+    
+    const normalizedPhotos = parsed.photos.map((photo) => ({
+      ...photo,
+      description:
+        typeof photo.description === 'string'
+          ? photo.description
+          : starterAlbum.photos.find((starter) => starter.id === photo.id)?.description ?? '',
+    }));
+    return { ...parsed, photos: normalizedPhotos };
   } catch {
     return starterAlbum;
   }
@@ -55,11 +63,11 @@ function Home() {
   const { data: serverAlbum } = useGetAlbum();
   const syncAlbum = useSyncAlbum();
   const queryClient = useQueryClient();
+  const [, setLocation] = useLocation();
 
   const [album, setAlbum] = useState<Album>(readAlbum);
   const [isEditing, setIsEditing] = useState(false);
   const [editingPhoto, setEditingPhoto] = useState<Photo | null>(null);
-  const [lightboxPhoto, setLightboxPhoto] = useState<Photo | null>(null);
   const [toast, setToast] = useState('');
   const [syncStatus, setSyncStatus] = useState('');
 
@@ -139,17 +147,10 @@ function Home() {
 
   const notify = (message: string) => setToast(message);
 
-  const updateCaption = (id: number, caption: string) => {
+  const updatePhoto = (id: number, next: { caption: string; description: string; src: string }) => {
     setAlbum((current) => ({
       ...current,
-      photos: current.photos.map((photo) => (photo.id === id ? { ...photo, caption } : photo)),
-    }));
-  };
-
-  const updateSource = (id: number, src: string) => {
-    setAlbum((current) => ({
-      ...current,
-      photos: current.photos.map((photo) => (photo.id === id ? { ...photo, src } : photo)),
+      photos: current.photos.map((photo) => (photo.id === id ? { ...photo, ...next } : photo)),
     }));
   };
 
@@ -240,9 +241,9 @@ function Home() {
                 className="photo-frame"
                 role="button"
                 tabIndex={0}
-                onClick={() => setLightboxPhoto(photo)}
+                onClick={() => setLocation(`/photo/${photo.id}`)}
                 onKeyDown={(event) => {
-                  if (event.key === 'Enter' || event.key === ' ') setLightboxPhoto(photo);
+                  if (event.key === 'Enter' || event.key === ' ') setLocation(`/photo/${photo.id}`);
                 }}
                 aria-label={`View ${photo.caption}`}
                 data-testid={`button-view-photo-${photo.id}`}
@@ -278,21 +279,11 @@ function Home() {
           photo={editingPhoto}
           onClose={() => setEditingPhoto(null)}
           onSave={(next) => {
-            updateCaption(editingPhoto.id, next.caption);
-            updateSource(editingPhoto.id, next.src);
+            updatePhoto(editingPhoto.id, next);
             setEditingPhoto(null);
             notify('Frame updated');
           }}
         />
-      )}
-
-      {lightboxPhoto && (
-        <div className="lightbox" role="dialog" aria-modal="true" aria-label={lightboxPhoto.caption}>
-          <button type="button" className="lightbox-close" onClick={() => setLightboxPhoto(null)} data-testid="button-close-lightbox" aria-label="Close preview">
-            <X size={25} strokeWidth={1.5} aria-hidden="true" />
-          </button>
-          <img src={lightboxPhoto.src} alt={lightboxPhoto.caption} referrerPolicy="no-referrer" data-testid="img-lightbox" />
-        </div>
       )}
 
       {toast && <div className="toast-note" role="status" data-testid="status-toast">{toast}</div>}
@@ -307,9 +298,10 @@ function PhotoEditor({
 }: {
   photo: Photo;
   onClose: () => void;
-  onSave: (next: { caption: string; src: string }) => void;
+  onSave: (next: { caption: string; description: string; src: string }) => void;
 }) {
   const [caption, setCaption] = useState(photo.caption);
+  const [description, setDescription] = useState(photo.description || '');
   const [src, setSrc] = useState(photo.src);
   const [url, setUrl] = useState('');
   const [fileName, setFileName] = useState('');
@@ -387,6 +379,18 @@ function PhotoEditor({
           maxLength={80}
         />
 
+        <label className="field-label" htmlFor="photo-description">Description</label>
+        <textarea
+          id="photo-description"
+          className="field-input"
+          value={description}
+          onChange={(event) => setDescription(event.target.value)}
+          placeholder="Describe this frame"
+          data-testid="input-photo-description"
+          rows={3}
+          maxLength={500}
+        />
+
         <div className="source-section">
           <p className="source-label">Replace the image</p>
           <label className="file-drop" htmlFor="photo-file">
@@ -431,10 +435,10 @@ function PhotoEditor({
             className="accent-btn save-btn"
             onClick={() => {
               if (url.trim()) {
-                applyImageUrl((nextSrc) => onSave({ caption: caption.trim(), src: nextSrc }));
+                applyImageUrl((nextSrc) => onSave({ caption: caption.trim(), description: description.trim(), src: nextSrc }));
                 return;
               }
-              onSave({ caption: caption.trim(), src });
+              onSave({ caption: caption.trim(), description: description.trim(), src });
             }}
             data-testid="button-save-photo"
           >
@@ -443,6 +447,89 @@ function PhotoEditor({
         </div>
       </aside>
     </>
+  );
+}
+
+function PhotoDetail() {
+  const params = useParams<{ id: string }>();
+  const photoId = Number(params.id);
+  const [, setLocation] = useLocation();
+  const { data: serverAlbum } = useGetAlbum();
+  
+  const [album, setAlbum] = useState<Album>(readAlbum);
+  const initializedForId = useRef<string | null>(null);
+  const hadUnsyncedLocal = useRef(window.localStorage.getItem(STORAGE_DIRTY_KEY) === 'true');
+
+  useEffect(() => {
+    if (serverAlbum && initializedForId.current !== 'loaded') {
+      initializedForId.current = 'loaded';
+      if (!hadUnsyncedLocal.current) {
+        setAlbum({ title: serverAlbum.title, photos: serverAlbum.photos });
+      }
+    }
+  }, [serverAlbum]);
+  
+  const photoIndex = album.photos.findIndex(p => p.id === photoId);
+  const photo = photoIndex !== -1 ? album.photos[photoIndex] : null;
+  
+  if (!photo) {
+    return (
+      <main className="album-shell flex items-center justify-center">
+        <div className="page-wrap text-center" style={{ paddingTop: '100px' }}>
+          <h2>Photo not found</h2>
+          <button className="outline-btn mt-8" onClick={() => setLocation('/')}>Return to album</button>
+        </div>
+      </main>
+    );
+  }
+  
+  const relatedPhotos = [
+    album.photos[(photoIndex + 1) % 9],
+    album.photos[(photoIndex + 2) % 9],
+    album.photos[(photoIndex + 3) % 9],
+  ].filter(Boolean);
+
+  return (
+    <main className="album-shell" key={photo.id}>
+      <header className="page-wrap masthead" style={{ paddingBottom: '30px' }}>
+        <div className="masthead-top">
+          <Link href="/" className="brand-lockup" data-testid="link-back-album">
+            <ArrowLeft size={16} style={{ marginRight: '8px' }} aria-hidden="true" />
+            <span className="brand-name">Back to album</span>
+          </Link>
+        </div>
+      </header>
+
+      <article className="page-wrap detail-content">
+        <div className="detail-image-wrap">
+          <img src={photo.src} alt={photo.caption} referrerPolicy="no-referrer" data-testid="img-detail-photo" />
+        </div>
+        
+        <div className="detail-info">
+          <h1 className="detail-title">{photo.caption}</h1>
+          <p className="detail-description" data-testid="text-detail-description">{photo.description}</p>
+        </div>
+      </article>
+
+      {relatedPhotos.length > 0 && (
+        <section className="page-wrap related-section">
+          <h2 className="related-title">Related pictures</h2>
+          <div className="related-grid">
+            {relatedPhotos.map((relPhoto) => (
+              <Link key={relPhoto.id} href={`/photo/${relPhoto.id}`} className="related-card" data-testid={`link-related-${relPhoto.id}`}>
+                <div className="related-frame">
+                  <img src={relPhoto.src} alt={relPhoto.caption} referrerPolicy="no-referrer" />
+                </div>
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
+      
+      <footer className="page-wrap footer">
+        <span>WD Photo / Personal archive</span>
+      </footer>
+    </main>
   );
 }
 
@@ -589,6 +676,7 @@ function ClerkProviderWithRoutes() {
           <RoutedErrorBoundary>
             <Switch>
               <Route path="/" component={Home} />
+              <Route path="/photo/:id" component={PhotoDetail} />
               <Route path="/sign-in/*?" component={SignInPage} />
               <Route path="/sign-up/*?" component={SignUpPage} />
               <Route component={NotFound} />

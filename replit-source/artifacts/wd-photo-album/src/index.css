@@ -139,6 +139,25 @@ button:focus-visible, input:focus-visible {
 @keyframes fade-in { from { opacity:0; } to { opacity:1; } }
 @keyframes panel-in { from { opacity:0; transform:translateX(20px); } to { opacity:1; transform:translateX(0); } }
 @keyframes toast-in { from { opacity:0; transform:translate(-50%, 10px); } to { opacity:1; transform:translate(-50%, 0); } }
+
+textarea.field-input { resize: vertical; line-height: 1.5; font-family: inherit; }
+
+.detail-content { padding: 40px 0 60px; }
+.detail-image-wrap { width: 100%; max-height: 75vh; border-radius: 14px; overflow: hidden; background: #151515; display: flex; align-items: center; justify-content: center; margin-bottom: 40px; }
+.detail-image-wrap img { max-width: 100%; max-height: 75vh; object-fit: contain; }
+.detail-info { max-width: 720px; margin: 0 auto; text-align: center; }
+.detail-title { margin: 0 0 16px; color: #edeade; font-size: clamp(2rem, 5vw, 3.5rem); line-height: 1.1; letter-spacing: -0.05em; font-weight: 500; }
+.detail-description { margin: 0; color: #a4a39a; font-size: 1.1rem; line-height: 1.6; }
+
+.related-section { padding: 60px 0 80px; border-top: 1px solid rgba(237,234,222,.17); }
+.related-title { margin: 0 0 24px; color: #88877f; font: 11px var(--app-font-mono); letter-spacing: .1em; text-transform: uppercase; text-align: center; }
+.related-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; max-width: 900px; margin: 0 auto; }
+.related-card { display: block; border-radius: 10px; overflow: hidden; background: #151515; transition: transform .3s; }
+.related-card:hover { transform: translateY(-4px); }
+.related-frame { aspect-ratio: 16 / 9; overflow: hidden; }
+.related-frame img { width: 100%; height: 100%; object-fit: cover; filter: saturate(.8); transition: filter .3s, transform .5s; }
+.related-card:hover .related-frame img { filter: saturate(1); transform: scale(1.05); }
+
 @media (max-width: 800px) {
   .page-wrap { width:min(100% - 30px, 620px); }
   .masthead { padding-bottom:48px; }
@@ -147,6 +166,7 @@ button:focus-visible, input:focus-visible {
   .intro-copy { max-width:440px; }
   .gallery-grid { grid-template-columns:repeat(2, minmax(0,1fr)); gap:17px 12px; }
   .photo-card:nth-child(n) .photo-frame { aspect-ratio:1 / 1; }
+  .detail-image-wrap img { max-height: 60vh; }
 }
 @media (max-width: 520px) {
   .page-wrap { width:calc(100% - 28px); }
@@ -160,6 +180,11 @@ button:focus-visible, input:focus-visible {
   .photo-hover { opacity:1; padding:12px; }
   .editor-panel { padding:24px 20px; }
   .footer { flex-direction:column; gap:8px; }
+  .related-grid { grid-template-columns: 1fr; gap: 20px; }
+  .related-frame { aspect-ratio: 4 / 3; }
+  .detail-content { padding: 20px 0 40px; }
+  .detail-title { font-size: 2rem; }
+  .detail-description { font-size: 1rem; }
 }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration:.01ms !important; transition-duration:.01ms !important; scroll-behavior:auto !important; }

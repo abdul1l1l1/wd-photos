@@ -90,10 +90,14 @@ components:
         caption:
           type: string
           maxLength: 80
+        description:
+          type: string
+          maxLength: 500
       required:
         - id
         - src
         - caption
+        - description
     AlbumInput:
       type: object
       properties:

@@ -11,6 +11,7 @@ export type AlbumPhoto = {
   id: number;
   src: string;
   caption: string;
+  description: string;
 };
 
 export type AlbumDocument = {
@@ -43,15 +44,15 @@ type GitTree = {
 const starterAlbum: AlbumDocument = {
   title: "WD Photo",
   photos: [
-    { id: 1, src: "/images/photo-01.jpg", caption: "After the rain" },
-    { id: 2, src: "/images/photo-02.jpg", caption: "Quiet geometry" },
-    { id: 3, src: "/images/photo-03.jpg", caption: "Looking up" },
-    { id: 4, src: "/images/photo-04.jpg", caption: "Soft repetition" },
-    { id: 5, src: "/images/photo-05.jpg", caption: "Under the bridge" },
-    { id: 6, src: "/images/photo-06.jpg", caption: "Open to sky" },
-    { id: 7, src: "/images/photo-07.jpg", caption: "Lantern hour" },
-    { id: 8, src: "/images/photo-08.jpg", caption: "Hard light" },
-    { id: 9, src: "/images/photo-09.jpg", caption: "Edge of water" },
+    { id: 1, src: "/images/photo-01.jpg", caption: "After the rain", description: "A quiet building appears upside down in a shallow reflection, softened by wet pavement and the last traces of rain." },
+    { id: 2, src: "/images/photo-02.jpg", caption: "Quiet geometry", description: "A clean diagonal cuts across an open blue sky, reducing architecture to color, line, and negative space." },
+    { id: 3, src: "/images/photo-03.jpg", caption: "Looking up", description: "Warm brick towers rise toward bright clouds, framing a narrow opening in the city above." },
+    { id: 4, src: "/images/photo-04.jpg", caption: "Soft repetition", description: "Translucent white folds repeat across the frame, turning ordinary fabric into a study of light and rhythm." },
+    { id: 5, src: "/images/photo-05.jpg", caption: "Under the bridge", description: "The underside of a city bridge stretches overhead, its heavy structure balanced by warm light beyond." },
+    { id: 6, src: "/images/photo-06.jpg", caption: "Open to sky", description: "A pale opening interrupts a dark architectural grid, drawing the eye toward a small patch of sky." },
+    { id: 7, src: "/images/photo-07.jpg", caption: "Lantern hour", description: "A glowing lantern hangs against deepening blue, marking the quiet transition from daylight into evening." },
+    { id: 8, src: "/images/photo-08.jpg", caption: "Hard light", description: "Sharp sunlight divides the scene into bold planes, revealing texture through strong contrast and shadow." },
+    { id: 9, src: "/images/photo-09.jpg", caption: "Edge of water", description: "Water meets the built edge in a calm horizon, with muted tones that hold the scene in stillness." },
   ],
   lastSyncedAt: null,
 };
@@ -93,7 +94,9 @@ export async function readAlbumFromGitHub(): Promise<AlbumDocument> {
 
     const parsed = JSON.parse(
       Buffer.from(file.content.replace(/\n/g, ""), "base64").toString("utf8"),
-    ) as AlbumDocument;
+    ) as Omit<AlbumDocument, "photos"> & {
+      photos: Array<Omit<AlbumPhoto, "description"> & { description?: string }>;
+    };
 
     if (
       typeof parsed.title !== "string" ||
@@ -103,7 +106,17 @@ export async function readAlbumFromGitHub(): Promise<AlbumDocument> {
       return starterAlbum;
     }
 
-    return parsed;
+    return {
+      ...parsed,
+      photos: parsed.photos.map((photo) => ({
+        ...photo,
+        description:
+          typeof photo.description === "string"
+            ? photo.description
+            : starterAlbum.photos.find((starter) => starter.id === photo.id)
+                ?.description ?? "",
+      })),
+    };
   } catch (error) {
     if (error instanceof GitHubRequestError && error.status === 404) {
       return starterAlbum;
