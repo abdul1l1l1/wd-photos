@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" role="img" aria-labelledby="title">
+  <title id="title">WD Photo</title>
+  <rect width="96" height="96" rx="12" fill="#080808"/>
+  <rect x="8" y="8" width="80" height="80" rx="8" fill="none" stroke="#d7ff62" stroke-width="3"/>
+  <text x="48" y="56" fill="#d7ff62" font-family="Arial, sans-serif" font-size="24" font-weight="700" text-anchor="middle">W·D</text>
+</svg>
