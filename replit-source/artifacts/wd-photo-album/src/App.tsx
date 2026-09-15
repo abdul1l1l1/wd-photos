@@ -247,7 +247,7 @@ function Home() {
                 aria-label={`View ${photo.caption}`}
                 data-testid={`button-view-photo-${photo.id}`}
               >
-                <img src={photo.src} alt={photo.caption} data-testid={`img-photo-${photo.id}`} />
+                <img src={photo.src} alt={photo.caption} referrerPolicy="no-referrer" data-testid={`img-photo-${photo.id}`} />
                 <div className="photo-hover">
                   {canEdit && (
                     <button
@@ -293,7 +293,7 @@ function Home() {
           <button type="button" className="lightbox-close" onClick={() => setLightboxPhoto(null)} data-testid="button-close-lightbox" aria-label="Close preview">
             <X size={25} strokeWidth={1.5} aria-hidden="true" />
           </button>
-          <img src={lightboxPhoto.src} alt={lightboxPhoto.caption} data-testid="img-lightbox" />
+          <img src={lightboxPhoto.src} alt={lightboxPhoto.caption} referrerPolicy="no-referrer" data-testid="img-lightbox" />
         </div>
       )}
 
@@ -315,6 +315,7 @@ function PhotoEditor({
   const [src, setSrc] = useState(photo.src);
   const [url, setUrl] = useState('');
   const [fileName, setFileName] = useState('');
+  const [urlError, setUrlError] = useState('');
 
   const handleFile = (file?: File) => {
     if (!file) return;
@@ -327,6 +328,36 @@ function PhotoEditor({
       }
     };
     reader.readAsDataURL(file);
+  };
+
+  const applyImageUrl = (onReady?: (nextSrc: string) => void) => {
+    const nextSrc = url.trim();
+    if (!nextSrc) {
+      setUrlError('Paste a direct image URL first.');
+      return;
+    }
+
+    try {
+      const parsed = new URL(nextSrc);
+      if (parsed.protocol !== 'https:' && parsed.protocol !== 'http:') {
+        throw new Error('Unsupported protocol');
+      }
+    } catch {
+      setUrlError('Enter a valid http or https image URL.');
+      return;
+    }
+
+    setUrlError('');
+    const image = new Image();
+    image.referrerPolicy = 'no-referrer';
+    image.onload = () => {
+      setSrc(nextSrc);
+      onReady?.(nextSrc);
+    };
+    image.onerror = () => {
+      setUrlError('This link did not load as an image. Try a direct JPG, PNG, or WebP URL.');
+    };
+    image.src = nextSrc;
   };
 
   return (
@@ -344,7 +375,7 @@ function PhotoEditor({
         </div>
 
         <div className="editor-preview">
-          <img src={src} alt="" />
+          <img src={src} alt="" referrerPolicy="no-referrer" />
         </div>
 
         <label className="field-label" htmlFor="photo-caption">Caption</label>
@@ -375,7 +406,10 @@ function PhotoEditor({
             <input
               className="field-input"
               value={url}
-              onChange={(event) => setUrl(event.target.value)}
+              onChange={(event) => {
+                setUrl(event.target.value);
+                setUrlError('');
+              }}
               placeholder="Paste an image URL"
               aria-label="Image URL"
               data-testid="input-photo-url"
@@ -383,19 +417,29 @@ function PhotoEditor({
             <button
               type="button"
               className="url-apply"
-              onClick={() => {
-                if (url.trim()) setSrc(url.trim());
-              }}
+              onClick={() => applyImageUrl()}
               data-testid="button-apply-photo-url"
             >
               Use URL
             </button>
           </div>
+          {urlError && <p className="field-error" role="alert">{urlError}</p>}
         </div>
 
         <div className="panel-actions">
           <button type="button" className="outline-btn" onClick={onClose} data-testid="button-cancel-photo">Cancel</button>
-          <button type="button" className="accent-btn save-btn" onClick={() => onSave({ caption: caption.trim(), src })} data-testid="button-save-photo">
+          <button
+            type="button"
+            className="accent-btn save-btn"
+            onClick={() => {
+              if (url.trim()) {
+                applyImageUrl((nextSrc) => onSave({ caption: caption.trim(), src: nextSrc }));
+                return;
+              }
+              onSave({ caption: caption.trim(), src });
+            }}
+            data-testid="button-save-photo"
+          >
             <ImagePlus size={14} strokeWidth={1.8} aria-hidden="true" /> Save frame
           </button>
         </div>
