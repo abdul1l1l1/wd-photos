@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#050505">
+  <title>WD Photo</title>
+  <style>
+    :root { color-scheme: dark; --bg:#050505; --text:#f5f5f2; --muted:#8b8b87; --line:#242424; }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { margin:0; background:var(--bg); color:var(--text); font-family:Arial,Helvetica,sans-serif; }
+    header { min-height:42vh; display:flex; align-items:flex-end; justify-content:space-between; gap:2rem; padding:clamp(2rem,6vw,6rem); border-bottom:1px solid var(--line); }
+    h1 { margin:0; font-size:clamp(4rem,14vw,13rem); line-height:.72; letter-spacing:-.075em; text-transform:uppercase; }
+    .intro { max-width:20rem; margin:0 0 .4rem; color:var(--muted); font-size:.82rem; line-height:1.5; text-transform:uppercase; letter-spacing:.14em; }
+    main { padding:clamp(1rem,2.6vw,2.6rem); }
+    .gallery { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:clamp(.75rem,1.4vw,1.4rem); }
+    figure { margin:0; position:relative; overflow:hidden; background:#111; aspect-ratio:4/5; }
+    img { width:100%; height:100%; display:block; object-fit:cover; filter:saturate(.72) contrast(1.06); transition:transform .6s ease,filter .6s ease; }
+    figure:hover img { transform:scale(1.035); filter:saturate(1) contrast(1.02); }
+    figcaption { position:absolute; inset:auto 0 0; display:flex; justify-content:space-between; gap:1rem; padding:3.2rem 1rem 1rem; background:linear-gradient(transparent,rgba(0,0,0,.76)); font-size:.7rem; letter-spacing:.14em; text-transform:uppercase; }
+    figcaption span:last-child { color:#b9b9b3; }
+    footer { padding:4rem clamp(1rem,2.6vw,2.6rem); color:var(--muted); font-size:.68rem; letter-spacing:.15em; text-transform:uppercase; }
+    @media (max-width:760px) { header { min-height:34vh; align-items:flex-start; flex-direction:column; justify-content:flex-end; } .gallery { grid-template-columns:1fr; } figure { aspect-ratio:4/5; } }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>WD<br>Photo</h1>
+    <p class="intro">Nine frames. Three rows. A quiet collection of places, lines, light, and motion.</p>
+  </header>
+  <main>
+    <section class="gallery" aria-label="WD photo album">
+      <figure><img src="images/photo-01.jpg" alt="Reflective modern architecture beside water"><figcaption><span>Frame 01</span><span>Reflection</span></figcaption></figure>
+      <figure><img src="images/photo-02.jpg" alt="Minimal architectural detail"><figcaption><span>Frame 02</span><span>Structure</span></figcaption></figure>
+      <figure><img src="images/photo-03.jpg" alt="City skyline beneath a warm sky"><figcaption><span>Frame 03</span><span>Skyline</span></figcaption></figure>
+      <figure><img src="images/photo-04.jpg" alt="White modern city architecture"><figcaption><span>Frame 04</span><span>Form</span></figcaption></figure>
+      <figure><img src="images/photo-05.jpg" alt="Vintage bridge scene"><figcaption><span>Frame 05</span><span>Crossing</span></figcaption></figure>
+      <figure><img src="images/photo-06.jpg" alt="Dark geometric city structure"><figcaption><span>Frame 06</span><span>Web</span></figcaption></figure>
+      <figure><img src="images/photo-07.jpg" alt="Red lights in a city at night"><figcaption><span>Frame 07</span><span>After Dark</span></figcaption></figure>
+      <figure><img src="images/photo-08.jpg" alt="Abstract urban staircase"><figcaption><span>Frame 08</span><span>Ascent</span></figcaption></figure>
+      <figure><img src="images/photo-09.jpg" alt="Minimal mountain architecture"><figcaption><span>Frame 09</span><span>Stillness</span></figcaption></figure>
+    </section>
+  </main>
+  <footer>WD Photo — Selected Works</footer>
+</body>
+</html>
