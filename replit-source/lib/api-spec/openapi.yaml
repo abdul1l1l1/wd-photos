@@ -1,0 +1,129 @@
+openapi: 3.1.0
+info:
+  # Do not change the title, if the title changes, the import paths will be broken
+  title: Api
+  version: 0.1.0
+  description: API specification
+servers:
+  - url: /api
+    description: Base API path
+tags:
+  - name: health
+    description: Health operations
+  - name: album
+    description: WD Photo album synchronization
+paths:
+  /healthz:
+    get:
+      operationId: healthCheck
+      tags: [health]
+      summary: Health check
+      description: Returns server health status
+      responses:
+        "200":
+          description: Healthy
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthStatus"
+  /album:
+    get:
+      operationId: getAlbum
+      tags: [album]
+      summary: Get the saved photo album
+      description: Returns the latest album saved in the connected GitHub repository.
+      responses:
+        "200":
+          description: Current album
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AlbumState"
+        "502":
+          description: GitHub could not be reached
+    put:
+      operationId: syncAlbum
+      tags: [album]
+      summary: Save the photo album to GitHub
+      description: Saves album metadata and uploaded images to the connected GitHub repository. The first signed-in editor becomes the album owner.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AlbumInput"
+      responses:
+        "200":
+          description: Album saved
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AlbumState"
+        "400":
+          description: Invalid album data
+        "401":
+          description: Sign-in required
+        "403":
+          description: Only the album owner can save
+        "502":
+          description: GitHub could not be updated
+components:
+  schemas:
+    HealthStatus:
+      type: object
+      properties:
+        status:
+          type: string
+      required:
+        - status
+    Photo:
+      type: object
+      properties:
+        id:
+          type: integer
+          minimum: 1
+          maximum: 9
+        src:
+          type: string
+          minLength: 1
+          maxLength: 8000000
+        caption:
+          type: string
+          maxLength: 80
+      required:
+        - id
+        - src
+        - caption
+    AlbumInput:
+      type: object
+      properties:
+        title:
+          type: string
+          minLength: 1
+          maxLength: 48
+        photos:
+          type: array
+          minItems: 9
+          maxItems: 9
+          items:
+            $ref: "#/components/schemas/Photo"
+      required:
+        - title
+        - photos
+    AlbumState:
+      allOf:
+        - $ref: "#/components/schemas/AlbumInput"
+        - type: object
+          properties:
+            lastSyncedAt:
+              type: ["string", "null"]
+              format: date-time
+            canEdit:
+              type: boolean
+            ownerClaimed:
+              type: boolean
+          required:
+            - lastSyncedAt
+            - canEdit
+            - ownerClaimed
+
