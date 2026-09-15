@@ -73,7 +73,7 @@ function Home() {
     if (serverAlbum && initializedForId.current !== 'loaded') {
       initializedForId.current = 'loaded';
       lastSaved.current = { title: serverAlbum.title, photos: serverAlbum.photos };
-      if (!hadUnsyncedLocal.current || !serverAlbum.canEdit) {
+      if (!hadUnsyncedLocal.current) {
         setAlbum({ title: serverAlbum.title, photos: serverAlbum.photos });
       }
     }
@@ -102,14 +102,16 @@ function Home() {
   const showClaimMessage = serverAlbum && !ownerClaimed;
 
   useEffect(() => {
-    if (!canEdit) setIsEditing(false);
-  }, [canEdit]);
-
-  useEffect(() => {
     if (initializedForId.current !== 'loaded') return;
-    if (!canEdit && ownerClaimed) return;
 
     const hasChanged = JSON.stringify(debouncedAlbum) !== JSON.stringify(lastSaved.current);
+    if (!canEdit) {
+      if (hasChanged) {
+        setSyncStatus(isSignedIn ? 'Saved locally — owner sign-in required to sync' : 'Saved locally — sign in to sync');
+      }
+      return;
+    }
+
     if (hasChanged) {
       setSyncStatus('Saving...');
       mutateFnRef.current({ data: debouncedAlbum }, {
@@ -127,7 +129,7 @@ function Home() {
         }
       });
     }
-  }, [debouncedAlbum, canEdit, ownerClaimed, queryClient]);
+  }, [debouncedAlbum, canEdit, isSignedIn, queryClient]);
 
   useEffect(() => {
     if (!toast) return;
@@ -159,7 +161,7 @@ function Home() {
     notify('Starter album restored');
   };
 
-  const effectiveIsEditing = isEditing && canEdit;
+  const effectiveIsEditing = isEditing;
 
   return (
     <main className="album-shell">
@@ -181,17 +183,15 @@ function Home() {
               </span>
             )}
 
-            {canEdit && (
-              <button
-                type="button"
-                className="outline-btn"
-                onClick={() => setIsEditing((value) => !value)}
-                data-testid="button-toggle-edit"
-                aria-pressed={effectiveIsEditing}
-              >
-                {effectiveIsEditing ? 'Done editing' : 'Edit album'}
-              </button>
-            )}
+            <button
+              type="button"
+              className="outline-btn"
+              onClick={() => setIsEditing((value) => !value)}
+              data-testid="button-toggle-edit"
+              aria-pressed={effectiveIsEditing}
+            >
+              {effectiveIsEditing ? 'Done editing' : 'Edit album'}
+            </button>
             {effectiveIsEditing && (
               <button type="button" className="accent-btn" onClick={resetAlbum} data-testid="button-reset-album">
                 <RotateCcw size={13} strokeWidth={1.8} aria-hidden="true" /> Reset
@@ -249,20 +249,18 @@ function Home() {
               >
                 <img src={photo.src} alt={photo.caption} referrerPolicy="no-referrer" data-testid={`img-photo-${photo.id}`} />
                 <div className="photo-hover">
-                  {canEdit && (
-                    <button
-                      type="button"
-                      className="edit-photo-btn"
-                      onClick={(event) => {
-                        event.stopPropagation();
-                        setEditingPhoto(photo);
-                      }}
-                      aria-label={`Edit ${photo.caption}`}
-                      data-testid={`button-edit-photo-${photo.id}`}
-                    >
-                      <Pencil size={15} strokeWidth={1.7} aria-hidden="true" />
-                    </button>
-                  )}
+                  <button
+                    type="button"
+                    className="edit-photo-btn"
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      setEditingPhoto(photo);
+                    }}
+                    aria-label={`Edit ${photo.caption}`}
+                    data-testid={`button-edit-photo-${photo.id}`}
+                  >
+                    <Pencil size={15} strokeWidth={1.7} aria-hidden="true" />
+                  </button>
                 </div>
               </div>
             </article>
@@ -272,10 +270,10 @@ function Home() {
 
       <footer className="page-wrap footer">
         <span>WD Photo / Personal archive</span>
-        <span className="footer-accent">{canEdit ? 'Changes sync automatically' : ''}</span>
+        <span className="footer-accent">{canEdit ? 'Changes sync automatically' : 'Changes save on this device'}</span>
       </footer>
 
-      {editingPhoto && canEdit && (
+      {editingPhoto && (
         <PhotoEditor
           photo={editingPhoto}
           onClose={() => setEditingPhoto(null)}
