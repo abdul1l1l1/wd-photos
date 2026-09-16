@@ -120,9 +120,11 @@ export function reconcileAlbumAfterServerLoad(
   localAlbum: Album,
   serverAlbum: Album,
   wasMarkedUnsynced: boolean,
+  hasStoredLocalAlbum = false,
 ): { album: Album; hasUnsyncedLocalChanges: boolean } {
   const hasUnsyncedLocalChanges =
-    wasMarkedUnsynced && !albumsEqual(localAlbum, serverAlbum);
+    (wasMarkedUnsynced || hasStoredLocalAlbum) &&
+    !albumsEqual(localAlbum, serverAlbum);
   return {
     album: albumAfterServerLoad(
       localAlbum,

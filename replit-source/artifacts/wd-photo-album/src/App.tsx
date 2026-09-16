@@ -87,6 +87,7 @@ function Home() {
   const [syncStatus, setSyncStatus] = useState('');
 
   const initializedForId = useRef<string | null>(null);
+  const hadStoredLocalAlbum = useRef(window.localStorage.getItem(STORAGE_KEY) !== null);
   const hadUnsyncedLocal = useRef(window.localStorage.getItem(STORAGE_DIRTY_KEY) === 'true');
   const preserveDirtyUntilHydration = useRef(hadUnsyncedLocal.current);
   const localBaseline = useRef<Album>(album);
@@ -104,6 +105,7 @@ function Home() {
           current,
           { title: serverAlbum.title, photos: serverAlbum.photos },
           hadUnsyncedLocal.current,
+          hadStoredLocalAlbum.current,
         );
         hadUnsyncedLocal.current = reconciled.hasUnsyncedLocalChanges;
         if (reconciled.hasUnsyncedLocalChanges) {
@@ -139,8 +141,6 @@ function Home() {
   }, [album]);
 
   const canEdit = serverAlbum?.canEdit ?? false;
-  const ownerClaimed = serverAlbum?.ownerClaimed ?? true;
-  const showClaimMessage = serverAlbum && !ownerClaimed;
 
   useEffect(() => {
     if (initializedForId.current !== 'loaded') return;
@@ -218,16 +218,9 @@ function Home() {
             <span className="brand-name">Photo archive</span>
           </div>
           <div className="top-actions">
-            {showClaimMessage && (
-              <span className="status-note" style={{ color: 'var(--accent)' }}>
-                {isSignedIn ? 'Claim this album by saving changes' : 'First to sign in and save becomes owner'}
-              </span>
-            )}
-            {!showClaimMessage && (
-              <span className="status-note">
-                {syncStatus || (effectiveIsEditing ? 'Editing on' : 'A small collection')}
-              </span>
-            )}
+            <span className="status-note">
+              {syncStatus || (effectiveIsEditing ? 'Editing on' : 'A small collection')}
+            </span>
 
             <button
               type="button"
