@@ -47,29 +47,29 @@ const relatedPhotosById: Record<number, RelatedPhoto[]> = {
     { src: '/images/context-04-03-v2.jpg', title: 'Night drive in rain' },
   ],
   5: [
-    { src: '/images/related-05-01.jpg', title: 'Beneath the span' },
-    { src: '/images/related-05-02.jpg', title: 'Concrete passage' },
-    { src: '/images/related-05-03.jpg', title: 'Bridge light' },
+    { src: '/images/context-05-01-v2.jpg', title: 'Manhattan Bridge from DUMBO' },
+    { src: '/images/context-05-02-v2.jpg', title: 'Under the steel span' },
+    { src: '/images/context-05-03-v2.jpg', title: 'Bridge between brick streets' },
   ],
   6: [
     { src: '/images/related-06-01.jpg', title: 'Cut to sky' },
-    { src: '/images/related-06-02.jpg', title: 'Framed daylight' },
-    { src: '/images/related-06-03.jpg', title: 'Open ceiling' },
+    { src: '/images/context-06-02-v2.jpg', title: 'Structured skylight' },
+    { src: '/images/context-06-03-v2.jpg', title: 'Glass geometry overhead' },
   ],
   7: [
     { src: '/images/related-07-01.jpg', title: 'Evening signal' },
-    { src: '/images/related-07-02.jpg', title: 'Amber at dusk' },
-    { src: '/images/related-07-03.jpg', title: 'Night lantern' },
+    { src: '/images/context-07-02-v2.jpg', title: 'Lanterns at dusk' },
+    { src: '/images/context-07-03-v2.jpg', title: 'Lantern light after dark' },
   ],
   8: [
-    { src: '/images/related-08-01.jpg', title: 'Divided sun' },
-    { src: '/images/related-08-02.jpg', title: 'Shadow plane' },
-    { src: '/images/related-08-03.jpg', title: 'Noon contrast' },
+    { src: '/images/context-08-01-v2.jpg', title: 'Window shadow on concrete' },
+    { src: '/images/context-08-02-v2.jpg', title: 'Diagonal afternoon light' },
+    { src: '/images/context-08-03-v2.jpg', title: 'Rhythm of light and shade' },
   ],
   9: [
     { src: '/images/related-09-01.jpg', title: 'Harbor stillness' },
-    { src: '/images/related-09-02.jpg', title: 'City at water' },
-    { src: '/images/related-09-03.jpg', title: 'Quiet shore' },
+    { src: '/images/context-09-02-v2.jpg', title: 'Calm shoreline' },
+    { src: '/images/context-09-03-v2.jpg', title: 'Where water meets land' },
   ],
 };
 function Home() {
@@ -291,6 +291,12 @@ function Home() {
               >
                 <img src={photo.src} alt={photo.caption} referrerPolicy="no-referrer" data-testid={`img-photo-${photo.id}`} />
                 <div className="photo-hover">
+                  <div className="photo-hover-copy">
+                    <h2 className="photo-hover-title">{photo.caption}</h2>
+                    <p className="photo-hover-description" data-testid={`text-photo-preview-${photo.id}`}>
+                      {photo.description}
+                    </p>
+                  </div>
                   <button
                     type="button"
                     className="edit-photo-btn"
