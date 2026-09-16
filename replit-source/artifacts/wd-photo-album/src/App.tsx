@@ -355,7 +355,6 @@ function PhotoEditor({
   const [url, setUrl] = useState('');
   const [fileName, setFileName] = useState('');
   const [urlError, setUrlError] = useState('');
-  const [contentError, setContentError] = useState('');
 
   const handleFile = (file?: File) => {
     if (!file) return;
@@ -365,7 +364,6 @@ function PhotoEditor({
       if (typeof reader.result === 'string') {
         setSrc(reader.result);
         setFileName(file.name);
-        setContentError('');
       }
     };
     reader.readAsDataURL(file);
@@ -441,7 +439,6 @@ function PhotoEditor({
           rows={3}
           maxLength={500}
         />
-        {contentError && <p className="field-error content-error" role="alert">{contentError}</p>}
 
         <div className="source-section">
           <p className="source-label">Replace the image</p>
@@ -488,24 +485,6 @@ function PhotoEditor({
             onClick={() => {
               const nextCaption = caption.trim();
               const nextDescription = description.trim();
-              const imageChanged = src !== photo.src || Boolean(url.trim());
-
-              if (!nextCaption) {
-                setContentError('Add a title that matches this picture.');
-                return;
-              }
-              if (nextDescription.length < 20) {
-                setContentError('Add a descriptive sentence of at least 20 characters.');
-                return;
-              }
-              if (
-                imageChanged &&
-                (nextCaption === photo.caption || nextDescription === photo.description)
-              ) {
-                setContentError('When replacing a picture, update both its title and description to match the new image.');
-                return;
-              }
-              setContentError('');
               if (url.trim()) {
                 applyImageUrl((nextSrc) => onSave({ caption: nextCaption, description: nextDescription, src: nextSrc }));
                 return;
