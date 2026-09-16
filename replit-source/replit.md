@@ -42,6 +42,8 @@ An editable nine-frame photo album with owner-only GitHub synchronization.
 ## User preferences
 
 - Mirror every requested app code, design, and asset change to the `abdul1l1l1/wd-photos` GitHub repository before finishing the request.
+- Every replacement gallery photo must receive a matching new title and a descriptive description.
+- Detail-page related pictures must use separate image assets that are not among the nine main gallery photos.
 
 ## Gotchas
 
