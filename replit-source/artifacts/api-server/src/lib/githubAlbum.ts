@@ -44,12 +44,12 @@ type GitTree = {
 const starterAlbum: AlbumDocument = {
   title: "WD Photo",
   photos: [
-    { id: 1, src: "/images/restored-photo-01.jpg", caption: "Autumn Passage", description: "A pale gravel path disappears into a tunnel of copper and rust-colored trees, with fallen leaves gathering along the quiet woodland trail." },
-    { id: 2, src: "/images/restored-photo-02.jpg", caption: "Everyday Audio Kit", description: "Headphones, earbuds, charging cases, cables, and pocket-sized devices are arranged across dark fabric like the contents of a daily listening routine." },
-    { id: 3, src: "/images/restored-photo-03.jpg", caption: "City After Dark", description: "A brightly illuminated skyline rises against the night, with glass towers, colorful lights, and flowing traffic defining the city after sunset." },
-    { id: 4, src: "/images/restored-photo-04.jpg", caption: "Through the Rain", description: "Traffic signals and red brake lights blur behind a rain-covered windshield, turning an ordinary drive into a layered study of water, color, and motion." },
-    { id: 5, src: "/images/restored-photo-05.jpg", caption: "Beneath the Manhattan Bridge", description: "The steel span of the Manhattan Bridge crosses overhead while the distant skyline appears beyond its columns in warm late-day light." },
-    { id: 6, src: "/images/restored-photo-06.jpg", caption: "Open Octagon", description: "Dark structural beams form a precise octagonal frame around a bright opening, drawing the eye upward toward a clear and nearly featureless sky." },
+    { id: 1, src: "/images/restored-photo-01-v2.jpg", caption: "Autumn Passage", description: "A pale gravel path disappears into a tunnel of copper and rust-colored trees, with fallen leaves gathering along the quiet woodland trail." },
+    { id: 2, src: "/images/restored-photo-02-v2.jpg", caption: "Everyday Audio Kit", description: "Headphones, earbuds, charging cases, cables, and pocket-sized devices are arranged across dark fabric like the contents of a daily listening routine." },
+    { id: 3, src: "/images/restored-photo-03-v2.jpg", caption: "City After Dark", description: "A brightly illuminated skyline rises against the night, with glass towers, colorful lights, and flowing traffic defining the city after sunset." },
+    { id: 4, src: "/images/restored-photo-04-v2.jpg", caption: "Through the Rain", description: "Traffic signals and red brake lights blur behind a rain-covered windshield, turning an ordinary drive into a layered study of water, color, and motion." },
+    { id: 5, src: "/images/restored-photo-05-v2.jpg", caption: "Beneath the Manhattan Bridge", description: "The steel span of the Manhattan Bridge crosses overhead while the distant skyline appears beyond its columns in warm late-day light." },
+    { id: 6, src: "/images/restored-photo-06-v2.jpg", caption: "Open Octagon", description: "Dark structural beams form a precise octagonal frame around a bright opening, drawing the eye upward toward a clear and nearly featureless sky." },
     { id: 7, src: "/images/photo-07.jpg", caption: "Lantern hour", description: "A glowing lantern hangs against deepening blue, marking the quiet transition from daylight into evening." },
     { id: 8, src: "/images/photo-08.jpg", caption: "Hard light", description: "Sharp sunlight divides the scene into bold planes, revealing texture through strong contrast and shadow." },
     { id: 9, src: "/images/photo-09.jpg", caption: "Edge of water", description: "Water meets the built edge in a calm horizon, with muted tones that hold the scene in stillness." },
