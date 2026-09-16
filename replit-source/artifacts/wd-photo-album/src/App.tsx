@@ -26,24 +26,25 @@ import {
 type RelatedPhoto = { src: string; title: string };
 const relatedPhotosById: Record<number, RelatedPhoto[]> = {
   1: [
-    { src: '/images/related-01-01.jpg', title: 'Puddle geometry' },
-    { src: '/images/related-01-02.jpg', title: 'Rainlit reflection' },
-    { src: '/images/related-01-03.jpg', title: 'Streets after rain' },
+    { src: '/images/context-01-01-v2.jpg', title: 'Path through fall color' },
+    { src: '/images/context-01-02-v2.jpg', title: 'Leaves across the woodland' },
+    { src: '/images/context-01-03-v2.jpg', title: 'Autumn trail' },
   ],
   2: [
-    { src: '/images/related-02-01.jpg', title: 'Blue divide' },
-    { src: '/images/related-02-02.jpg', title: 'Edge of silence' },
-    { src: '/images/related-02-03.jpg', title: 'Skybound facade' },
+    { src: '/images/context-02-01-v2.jpg', title: 'Over-ear listening' },
+    { src: '/images/context-02-02-v2.jpg', title: 'Music on the move' },
+    { src: '/images/context-02-03-v2.jpg', title: 'Portable audio' },
   ],
   3: [
-    { src: '/images/related-03-01.jpg', title: 'Up between towers' },
-    { src: '/images/related-03-02.jpg', title: 'Glass and cloud' },
-    { src: '/images/related-03-03.jpg', title: 'Vertical horizon' },
+    { src: '/images/context-03-01-v2.jpg', title: 'Skyline after dark' },
+    { src: '/images/context-03-02-v2.jpg', title: 'Clouds over downtown' },
+    { src: '/images/context-03-03-v2.jpg', title: 'A storm moving through the region' },
+    { src: '/images/context-03-04-v2.jpg', title: 'Waterfront at night' },
   ],
   4: [
-    { src: '/images/related-04-01.jpg', title: 'Light through linen' },
-    { src: '/images/related-04-02.jpg', title: 'Curtain study' },
-    { src: '/images/related-04-03.jpg', title: 'White texture' },
+    { src: '/images/context-04-01-v2.jpg', title: 'Wet roads ahead' },
+    { src: '/images/context-04-02-v2.jpg', title: 'Driving through rainfall' },
+    { src: '/images/context-04-03-v2.jpg', title: 'Night drive in rain' },
   ],
   5: [
     { src: '/images/related-05-01.jpg', title: 'Beneath the span' },
