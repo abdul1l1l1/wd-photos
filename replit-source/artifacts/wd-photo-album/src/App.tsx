@@ -14,6 +14,7 @@ import { dark } from '@clerk/themes';
 
 type Photo = { id: number; src: string; caption: string; description: string };
 type Album = { title: string; photos: Photo[] };
+type RelatedPhoto = { src: string; title: string };
 
 const STORAGE_KEY = 'wd-photo-album-v1';
 const STORAGE_DIRTY_KEY = 'wd-photo-album-unsynced';
@@ -29,6 +30,54 @@ const starterAlbum: Album = {
     { id: 7, src: '/images/photo-07.jpg', caption: 'Lantern hour', description: 'Dusk settling in, warm glow illuminating the evening as the day winds down.' },
     { id: 8, src: '/images/photo-08.jpg', caption: 'Hard light', description: 'Sharp contrasts created by the unforgiving midday sun, highlighting every detail.' },
     { id: 9, src: '/images/photo-09.jpg', caption: 'Edge of water', description: 'Where the land meets the calm surface, reflecting the sky in a perfect mirror.' },
+  ],
+};
+
+const relatedPhotosById: Record<number, RelatedPhoto[]> = {
+  1: [
+    { src: '/images/related-01-01.jpg', title: 'Rain on stone' },
+    { src: '/images/related-01-02.jpg', title: 'Reflected passage' },
+    { src: '/images/related-01-03.jpg', title: 'Weathered street' },
+  ],
+  2: [
+    { src: '/images/related-02-01.jpg', title: 'Angles in blue' },
+    { src: '/images/related-02-02.jpg', title: 'Facade rhythm' },
+    { src: '/images/related-02-03.jpg', title: 'Open geometry' },
+  ],
+  3: [
+    { src: '/images/related-03-01.jpg', title: 'Brick and cloud' },
+    { src: '/images/related-03-02.jpg', title: 'Vertical city' },
+    { src: '/images/related-03-03.jpg', title: 'Skyward frame' },
+  ],
+  4: [
+    { src: '/images/related-04-01.jpg', title: 'Folded light' },
+    { src: '/images/related-04-02.jpg', title: 'Quiet drapery' },
+    { src: '/images/related-04-03.jpg', title: 'Soft structure' },
+  ],
+  5: [
+    { src: '/images/related-05-01.jpg', title: 'Beneath the span' },
+    { src: '/images/related-05-02.jpg', title: 'Concrete passage' },
+    { src: '/images/related-05-03.jpg', title: 'Bridge light' },
+  ],
+  6: [
+    { src: '/images/related-06-01.jpg', title: 'Cut to sky' },
+    { src: '/images/related-06-02.jpg', title: 'Framed daylight' },
+    { src: '/images/related-06-03.jpg', title: 'Open ceiling' },
+  ],
+  7: [
+    { src: '/images/related-07-01.jpg', title: 'Evening signal' },
+    { src: '/images/related-07-02.jpg', title: 'Amber at dusk' },
+    { src: '/images/related-07-03.jpg', title: 'Night lantern' },
+  ],
+  8: [
+    { src: '/images/related-08-01.jpg', title: 'Divided sun' },
+    { src: '/images/related-08-02.jpg', title: 'Shadow plane' },
+    { src: '/images/related-08-03.jpg', title: 'Noon contrast' },
+  ],
+  9: [
+    { src: '/images/related-09-01.jpg', title: 'Harbor stillness' },
+    { src: '/images/related-09-02.jpg', title: 'City at water' },
+    { src: '/images/related-09-03.jpg', title: 'Quiet shore' },
   ],
 };
 
@@ -306,6 +355,7 @@ function PhotoEditor({
   const [url, setUrl] = useState('');
   const [fileName, setFileName] = useState('');
   const [urlError, setUrlError] = useState('');
+  const [contentError, setContentError] = useState('');
 
   const handleFile = (file?: File) => {
     if (!file) return;
@@ -315,6 +365,7 @@ function PhotoEditor({
       if (typeof reader.result === 'string') {
         setSrc(reader.result);
         setFileName(file.name);
+        setContentError('');
       }
     };
     reader.readAsDataURL(file);
@@ -374,7 +425,7 @@ function PhotoEditor({
           className="field-input"
           value={caption}
           onChange={(event) => setCaption(event.target.value)}
-          placeholder="Give this frame a name"
+          placeholder="Give this picture a specific title"
           data-testid="input-photo-caption"
           maxLength={80}
         />
@@ -385,11 +436,12 @@ function PhotoEditor({
           className="field-input"
           value={description}
           onChange={(event) => setDescription(event.target.value)}
-          placeholder="Describe this frame"
+          placeholder="Describe the subject, setting, light, and mood"
           data-testid="input-photo-description"
           rows={3}
           maxLength={500}
         />
+        {contentError && <p className="field-error content-error" role="alert">{contentError}</p>}
 
         <div className="source-section">
           <p className="source-label">Replace the image</p>
@@ -434,11 +486,31 @@ function PhotoEditor({
             type="button"
             className="accent-btn save-btn"
             onClick={() => {
-              if (url.trim()) {
-                applyImageUrl((nextSrc) => onSave({ caption: caption.trim(), description: description.trim(), src: nextSrc }));
+              const nextCaption = caption.trim();
+              const nextDescription = description.trim();
+              const imageChanged = src !== photo.src || Boolean(url.trim());
+
+              if (!nextCaption) {
+                setContentError('Add a title that matches this picture.');
                 return;
               }
-              onSave({ caption: caption.trim(), description: description.trim(), src });
+              if (nextDescription.length < 20) {
+                setContentError('Add a descriptive sentence of at least 20 characters.');
+                return;
+              }
+              if (
+                imageChanged &&
+                (nextCaption === photo.caption || nextDescription === photo.description)
+              ) {
+                setContentError('When replacing a picture, update both its title and description to match the new image.');
+                return;
+              }
+              setContentError('');
+              if (url.trim()) {
+                applyImageUrl((nextSrc) => onSave({ caption: nextCaption, description: nextDescription, src: nextSrc }));
+                return;
+              }
+              onSave({ caption: nextCaption, description: nextDescription, src });
             }}
             data-testid="button-save-photo"
           >
@@ -483,11 +555,7 @@ function PhotoDetail() {
     );
   }
   
-  const relatedPhotos = [
-    album.photos[(photoIndex + 1) % 9],
-    album.photos[(photoIndex + 2) % 9],
-    album.photos[(photoIndex + 3) % 9],
-  ].filter(Boolean);
+  const relatedPhotos = relatedPhotosById[photo.id] ?? [];
 
   return (
     <main className="album-shell" key={photo.id}>
@@ -515,12 +583,13 @@ function PhotoDetail() {
         <section className="page-wrap related-section">
           <h2 className="related-title">Related pictures</h2>
           <div className="related-grid">
-            {relatedPhotos.map((relPhoto) => (
-              <Link key={relPhoto.id} href={`/photo/${relPhoto.id}`} className="related-card" data-testid={`link-related-${relPhoto.id}`}>
+            {relatedPhotos.map((relatedPhoto, index) => (
+              <figure key={relatedPhoto.src} className="related-card" data-testid={`card-related-${photo.id}-${index + 1}`}>
                 <div className="related-frame">
-                  <img src={relPhoto.src} alt={relPhoto.caption} referrerPolicy="no-referrer" />
+                  <img src={relatedPhoto.src} alt={relatedPhoto.title} referrerPolicy="no-referrer" />
                 </div>
-              </Link>
+                <figcaption className="related-caption">{relatedPhoto.title}</figcaption>
+              </figure>
             ))}
           </div>
         </section>
