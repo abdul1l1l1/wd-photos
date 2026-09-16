@@ -18,13 +18,15 @@ type RelatedPhoto = { src: string; title: string };
 
 const STORAGE_KEY = 'wd-photo-album-v1';
 const STORAGE_DIRTY_KEY = 'wd-photo-album-unsynced';
+const PHOTO_COPY_VERSION_KEY = 'wd-photo-album-copy-version';
+const PHOTO_COPY_VERSION = '2';
 const starterAlbum: Album = {
   title: 'WD Photo',
   photos: [
-    { id: 1, src: '/images/photo-01.jpg', caption: 'After the rain', description: 'The streets glistening under the streetlights, reflecting a world washed clean.' },
-    { id: 2, src: '/images/photo-02.jpg', caption: 'Quiet geometry', description: 'Lines intersecting in silence, forming shapes that go unnoticed until now.' },
-    { id: 3, src: '/images/photo-03.jpg', caption: 'Looking up', description: 'A perspective from the ground, capturing the towering structures that define the skyline.' },
-    { id: 4, src: '/images/photo-04.jpg', caption: 'Soft repetition', description: 'Patterns repeating endlessly, creating a rhythm that soothes the eyes.' },
+    { id: 1, src: '/images/photo-01.jpg', caption: 'Upside-Down City', description: 'A narrow rain puddle turns the brick building across the street upside down, holding its windows and pointed roof inside a quiet strip of wet pavement.' },
+    { id: 2, src: '/images/photo-02.jpg', caption: 'One Line Above', description: 'A charcoal wall cuts diagonally across a bright cyan sky while a single white contrail passes overhead, reducing the scene to color, scale, and one precise line.' },
+    { id: 3, src: '/images/photo-03.jpg', caption: 'Red Towers, Blue Sky', description: 'Two reflective skyscrapers rise from opposite corners, their warm red grids framing a vivid opening of blue sky and drifting white clouds.' },
+    { id: 4, src: '/images/photo-04.jpg', caption: 'White Rhythm', description: 'Soft vertical folds move from shadow into light, transforming a simple white curtain into a quiet study of repetition, texture, and brightness.' },
     { id: 5, src: '/images/photo-05.jpg', caption: 'Under the bridge', description: 'Shadows cast long and deep, hiding secrets beneath concrete and steel.' },
     { id: 6, src: '/images/photo-06.jpg', caption: 'Open to sky', description: 'A rare clearing where the clouds gather, uninterrupted by the city below.' },
     { id: 7, src: '/images/photo-07.jpg', caption: 'Lantern hour', description: 'Dusk settling in, warm glow illuminating the evening as the day winds down.' },
@@ -35,24 +37,24 @@ const starterAlbum: Album = {
 
 const relatedPhotosById: Record<number, RelatedPhoto[]> = {
   1: [
-    { src: '/images/related-01-01.jpg', title: 'Rain on stone' },
-    { src: '/images/related-01-02.jpg', title: 'Reflected passage' },
-    { src: '/images/related-01-03.jpg', title: 'Weathered street' },
+    { src: '/images/related-01-01.jpg', title: 'Puddle geometry' },
+    { src: '/images/related-01-02.jpg', title: 'Rainlit reflection' },
+    { src: '/images/related-01-03.jpg', title: 'Streets after rain' },
   ],
   2: [
-    { src: '/images/related-02-01.jpg', title: 'Angles in blue' },
-    { src: '/images/related-02-02.jpg', title: 'Facade rhythm' },
-    { src: '/images/related-02-03.jpg', title: 'Open geometry' },
+    { src: '/images/related-02-01.jpg', title: 'Blue divide' },
+    { src: '/images/related-02-02.jpg', title: 'Edge of silence' },
+    { src: '/images/related-02-03.jpg', title: 'Skybound facade' },
   ],
   3: [
-    { src: '/images/related-03-01.jpg', title: 'Brick and cloud' },
-    { src: '/images/related-03-02.jpg', title: 'Vertical city' },
-    { src: '/images/related-03-03.jpg', title: 'Skyward frame' },
+    { src: '/images/related-03-01.jpg', title: 'Up between towers' },
+    { src: '/images/related-03-02.jpg', title: 'Glass and cloud' },
+    { src: '/images/related-03-03.jpg', title: 'Vertical horizon' },
   ],
   4: [
-    { src: '/images/related-04-01.jpg', title: 'Folded light' },
-    { src: '/images/related-04-02.jpg', title: 'Quiet drapery' },
-    { src: '/images/related-04-03.jpg', title: 'Soft structure' },
+    { src: '/images/related-04-01.jpg', title: 'Light through linen' },
+    { src: '/images/related-04-02.jpg', title: 'Curtain study' },
+    { src: '/images/related-04-03.jpg', title: 'White texture' },
   ],
   5: [
     { src: '/images/related-05-01.jpg', title: 'Beneath the span' },
@@ -89,13 +91,28 @@ function readAlbum(): Album {
     const parsed = JSON.parse(stored) as Album;
     if (!parsed?.title || !Array.isArray(parsed.photos) || parsed.photos.length !== 9) return starterAlbum;
     
-    const normalizedPhotos = parsed.photos.map((photo) => ({
-      ...photo,
-      description:
-        typeof photo.description === 'string'
-          ? photo.description
-          : starterAlbum.photos.find((starter) => starter.id === photo.id)?.description ?? '',
-    }));
+    const needsPhotoCopyUpgrade = window.localStorage.getItem(PHOTO_COPY_VERSION_KEY) !== PHOTO_COPY_VERSION;
+    const normalizedPhotos = parsed.photos.map((photo) => {
+      const starter = starterAlbum.photos.find((candidate) => candidate.id === photo.id);
+      const shouldUpgradeCopy =
+        needsPhotoCopyUpgrade &&
+        photo.id <= 4 &&
+        starter &&
+        photo.src === starter.src;
+
+      return {
+        ...photo,
+        caption: shouldUpgradeCopy ? starter.caption : photo.caption,
+        description: shouldUpgradeCopy
+          ? starter.description
+          : typeof photo.description === 'string'
+            ? photo.description
+            : starter?.description ?? '',
+      };
+    });
+    if (needsPhotoCopyUpgrade) {
+      window.localStorage.setItem(PHOTO_COPY_VERSION_KEY, PHOTO_COPY_VERSION);
+    }
     return { ...parsed, photos: normalizedPhotos };
   } catch {
     return starterAlbum;

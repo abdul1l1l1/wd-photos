@@ -44,10 +44,10 @@ type GitTree = {
 const starterAlbum: AlbumDocument = {
   title: "WD Photo",
   photos: [
-    { id: 1, src: "/images/photo-01.jpg", caption: "After the rain", description: "A quiet building appears upside down in a shallow reflection, softened by wet pavement and the last traces of rain." },
-    { id: 2, src: "/images/photo-02.jpg", caption: "Quiet geometry", description: "A clean diagonal cuts across an open blue sky, reducing architecture to color, line, and negative space." },
-    { id: 3, src: "/images/photo-03.jpg", caption: "Looking up", description: "Warm brick towers rise toward bright clouds, framing a narrow opening in the city above." },
-    { id: 4, src: "/images/photo-04.jpg", caption: "Soft repetition", description: "Translucent white folds repeat across the frame, turning ordinary fabric into a study of light and rhythm." },
+    { id: 1, src: "/images/photo-01.jpg", caption: "Upside-Down City", description: "A narrow rain puddle turns the brick building across the street upside down, holding its windows and pointed roof inside a quiet strip of wet pavement." },
+    { id: 2, src: "/images/photo-02.jpg", caption: "One Line Above", description: "A charcoal wall cuts diagonally across a bright cyan sky while a single white contrail passes overhead, reducing the scene to color, scale, and one precise line." },
+    { id: 3, src: "/images/photo-03.jpg", caption: "Red Towers, Blue Sky", description: "Two reflective skyscrapers rise from opposite corners, their warm red grids framing a vivid opening of blue sky and drifting white clouds." },
+    { id: 4, src: "/images/photo-04.jpg", caption: "White Rhythm", description: "Soft vertical folds move from shadow into light, transforming a simple white curtain into a quiet study of repetition, texture, and brightness." },
     { id: 5, src: "/images/photo-05.jpg", caption: "Under the bridge", description: "The underside of a city bridge stretches overhead, its heavy structure balanced by warm light beyond." },
     { id: 6, src: "/images/photo-06.jpg", caption: "Open to sky", description: "A pale opening interrupts a dark architectural grid, drawing the eye toward a small patch of sky." },
     { id: 7, src: "/images/photo-07.jpg", caption: "Lantern hour", description: "A glowing lantern hangs against deepening blue, marking the quiet transition from daylight into evening." },
