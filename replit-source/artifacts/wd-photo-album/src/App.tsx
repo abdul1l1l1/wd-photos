@@ -3,7 +3,7 @@ import { QueryClient, QueryClientProvider, useQueryClient } from '@tanstack/reac
 import { ErrorBoundary } from '@/components/error-boundary';
 import { Toaster } from '@/components/ui/toaster';
 import { TooltipProvider } from '@/components/ui/tooltip';
-import { ImagePlus, Pencil, RotateCcw, Upload, X, ArrowLeft } from 'lucide-react';
+import { ImagePlus, Pencil, Upload, X, ArrowLeft } from 'lucide-react';
 import { Route, Switch, useLocation, useParams, Router as WouterRouter, Link } from 'wouter';
 import NotFound from '@/pages/not-found';
 
@@ -11,30 +11,19 @@ import { useGetAlbum, useSyncAlbum, getGetAlbumQueryKey } from '@workspace/api-c
 import { ClerkProvider, SignIn, SignUp, useUser, useClerk, ClerkLoaded } from '@clerk/react';
 import { publishableKeyFromHost } from '@clerk/react/internal';
 import { dark } from '@clerk/themes';
+import {
+  STORAGE_DIRTY_KEY,
+  STORAGE_KEY,
+  albumsEqual,
+  hasUnsyncedAlbumChanges,
+  markAlbumUnsynced,
+  readAlbum,
+  reconcileAlbumAfterServerLoad,
+  type Album,
+  type Photo,
+} from './albumData';
 
-type Photo = { id: number; src: string; caption: string; description: string };
-type Album = { title: string; photos: Photo[] };
 type RelatedPhoto = { src: string; title: string };
-
-const STORAGE_KEY = 'wd-photo-album-v1';
-const STORAGE_DIRTY_KEY = 'wd-photo-album-unsynced';
-const PHOTO_COPY_VERSION_KEY = 'wd-photo-album-copy-version';
-const PHOTO_COPY_VERSION = '2';
-const starterAlbum: Album = {
-  title: 'WD Photo',
-  photos: [
-    { id: 1, src: '/images/photo-01.jpg', caption: 'Upside-Down City', description: 'A narrow rain puddle turns the brick building across the street upside down, holding its windows and pointed roof inside a quiet strip of wet pavement.' },
-    { id: 2, src: '/images/photo-02.jpg', caption: 'One Line Above', description: 'A charcoal wall cuts diagonally across a bright cyan sky while a single white contrail passes overhead, reducing the scene to color, scale, and one precise line.' },
-    { id: 3, src: '/images/photo-03.jpg', caption: 'Red Towers, Blue Sky', description: 'Two reflective skyscrapers rise from opposite corners, their warm red grids framing a vivid opening of blue sky and drifting white clouds.' },
-    { id: 4, src: '/images/photo-04.jpg', caption: 'White Rhythm', description: 'Soft vertical folds move from shadow into light, transforming a simple white curtain into a quiet study of repetition, texture, and brightness.' },
-    { id: 5, src: '/images/photo-05.jpg', caption: 'Under the bridge', description: 'Shadows cast long and deep, hiding secrets beneath concrete and steel.' },
-    { id: 6, src: '/images/photo-06.jpg', caption: 'Open to sky', description: 'A rare clearing where the clouds gather, uninterrupted by the city below.' },
-    { id: 7, src: '/images/photo-07.jpg', caption: 'Lantern hour', description: 'Dusk settling in, warm glow illuminating the evening as the day winds down.' },
-    { id: 8, src: '/images/photo-08.jpg', caption: 'Hard light', description: 'Sharp contrasts created by the unforgiving midday sun, highlighting every detail.' },
-    { id: 9, src: '/images/photo-09.jpg', caption: 'Edge of water', description: 'Where the land meets the calm surface, reflecting the sky in a perfect mirror.' },
-  ],
-};
-
 const relatedPhotosById: Record<number, RelatedPhoto[]> = {
   1: [
     { src: '/images/related-01-01.jpg', title: 'Puddle geometry' },
@@ -82,47 +71,6 @@ const relatedPhotosById: Record<number, RelatedPhoto[]> = {
     { src: '/images/related-09-03.jpg', title: 'Quiet shore' },
   ],
 };
-
-function readAlbum(): Album {
-  if (typeof window === 'undefined') return starterAlbum;
-  try {
-    const stored = window.localStorage.getItem(STORAGE_KEY);
-    if (!stored) return starterAlbum;
-    const parsed = JSON.parse(stored) as Album;
-    if (!parsed?.title || !Array.isArray(parsed.photos) || parsed.photos.length !== 9) return starterAlbum;
-    
-    const needsPhotoCopyUpgrade = window.localStorage.getItem(PHOTO_COPY_VERSION_KEY) !== PHOTO_COPY_VERSION;
-    const normalizedPhotos = parsed.photos.map((photo) => {
-      const starter = starterAlbum.photos.find((candidate) => candidate.id === photo.id);
-      const shouldUpgradeCopy =
-        needsPhotoCopyUpgrade &&
-        photo.id <= 4 &&
-        starter &&
-        photo.src === starter.src;
-
-      return {
-        ...photo,
-        caption: shouldUpgradeCopy ? starter.caption : photo.caption,
-        description: shouldUpgradeCopy
-          ? starter.description
-          : typeof photo.description === 'string'
-            ? photo.description
-            : starter?.description ?? '',
-      };
-    });
-    if (needsPhotoCopyUpgrade) {
-      window.localStorage.setItem(PHOTO_COPY_VERSION_KEY, PHOTO_COPY_VERSION);
-    }
-    return { ...parsed, photos: normalizedPhotos };
-  } catch {
-    return starterAlbum;
-  }
-}
-
-function cloneStarters(): Album {
-  return { title: starterAlbum.title, photos: starterAlbum.photos.map((photo) => ({ ...photo })) };
-}
-
 function Home() {
   const { isSignedIn } = useUser();
   const { signOut } = useClerk();
@@ -139,6 +87,8 @@ function Home() {
 
   const initializedForId = useRef<string | null>(null);
   const hadUnsyncedLocal = useRef(window.localStorage.getItem(STORAGE_DIRTY_KEY) === 'true');
+  const preserveDirtyUntilHydration = useRef(hadUnsyncedLocal.current);
+  const localBaseline = useRef<Album>(album);
   const lastSaved = useRef<Album>({ title: '', photos: [] });
   const mutateFnRef = useRef(syncAlbum.mutate);
   mutateFnRef.current = syncAlbum.mutate;
@@ -147,19 +97,35 @@ function Home() {
     if (serverAlbum && initializedForId.current !== 'loaded') {
       initializedForId.current = 'loaded';
       lastSaved.current = { title: serverAlbum.title, photos: serverAlbum.photos };
-      if (!hadUnsyncedLocal.current) {
-        setAlbum({ title: serverAlbum.title, photos: serverAlbum.photos });
-      }
+      localBaseline.current = lastSaved.current;
+      setAlbum((current) => {
+        const reconciled = reconcileAlbumAfterServerLoad(
+          current,
+          { title: serverAlbum.title, photos: serverAlbum.photos },
+          hadUnsyncedLocal.current,
+        );
+        hadUnsyncedLocal.current = reconciled.hasUnsyncedLocalChanges;
+        if (reconciled.hasUnsyncedLocalChanges) {
+          markAlbumUnsynced(window.localStorage);
+        } else {
+          window.localStorage.removeItem(STORAGE_DIRTY_KEY);
+        }
+        preserveDirtyUntilHydration.current = false;
+        return reconciled.album;
+      });
     }
   }, [serverAlbum]);
 
   useEffect(() => {
     window.localStorage.setItem(STORAGE_KEY, JSON.stringify(album));
-    if (
-      initializedForId.current === 'loaded' &&
-      JSON.stringify(album) !== JSON.stringify(lastSaved.current)
-    ) {
-      window.localStorage.setItem(STORAGE_DIRTY_KEY, 'true');
+    if (initializedForId.current === 'loaded') {
+      const hasChanges = !albumsEqual(album, lastSaved.current);
+      hadUnsyncedLocal.current = hasChanges;
+      if (hasChanges) {
+        markAlbumUnsynced(window.localStorage);
+      } else {
+        window.localStorage.removeItem(STORAGE_DIRTY_KEY);
+      }
     }
   }, [album]);
 
@@ -193,8 +159,10 @@ function Home() {
           setSyncStatus('Saved');
           const savedAlbum = { title: data.title, photos: data.photos };
           lastSaved.current = savedAlbum;
+          localBaseline.current = savedAlbum;
           setAlbum(savedAlbum);
           window.localStorage.removeItem(STORAGE_DIRTY_KEY);
+          hadUnsyncedLocal.current = false;
           queryClient.setQueryData(getGetAlbumQueryKey(), data);
           setTimeout(() => setSyncStatus(''), 2000);
         },
@@ -213,19 +181,29 @@ function Home() {
 
   const notify = (message: string) => setToast(message);
 
-  const updatePhoto = (id: number, next: { caption: string; description: string; src: string }) => {
-    setAlbum((current) => ({
-      ...current,
-      photos: current.photos.map((photo) => (photo.id === id ? { ...photo, ...next } : photo)),
-    }));
+  const updateLocalAlbum = (nextAlbum: Album) => {
+    if (albumsEqual(nextAlbum, album)) return;
+
+    const hasChanges = hasUnsyncedAlbumChanges(
+      nextAlbum,
+      localBaseline.current,
+      initializedForId.current !== 'loaded' && preserveDirtyUntilHydration.current,
+    );
+    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(nextAlbum));
+    hadUnsyncedLocal.current = hasChanges;
+    if (hasChanges) {
+      markAlbumUnsynced(window.localStorage);
+    } else {
+      window.localStorage.removeItem(STORAGE_DIRTY_KEY);
+    }
+    setAlbum(nextAlbum);
   };
 
-  const resetAlbum = () => {
-    if (!window.confirm('Reset the album to the nine starter photos? Your edits will be removed.')) return;
-    setAlbum(cloneStarters());
-    setIsEditing(false);
-    setEditingPhoto(null);
-    notify('Starter album restored');
+  const updatePhoto = (id: number, next: { caption: string; description: string; src: string }) => {
+    updateLocalAlbum({
+      ...album,
+      photos: album.photos.map((photo) => (photo.id === id ? { ...photo, ...next } : photo)),
+    });
   };
 
   const effectiveIsEditing = isEditing;
@@ -259,12 +237,6 @@ function Home() {
             >
               {effectiveIsEditing ? 'Done editing' : 'Edit album'}
             </button>
-            {effectiveIsEditing && (
-              <button type="button" className="accent-btn" onClick={resetAlbum} data-testid="button-reset-album">
-                <RotateCcw size={13} strokeWidth={1.8} aria-hidden="true" /> Reset
-              </button>
-            )}
-
             {!isSignedIn ? (
               <Link href="/sign-in" className="outline-btn" data-testid="link-sign-in">Owner sign in</Link>
             ) : (
@@ -282,7 +254,9 @@ function Home() {
               <input
                 className="title-input"
                 value={album.title}
-                onChange={(event) => setAlbum((current) => ({ ...current, title: event.target.value }))}
+                onChange={(event) => {
+                  updateLocalAlbum({ ...album, title: event.target.value });
+                }}
                 aria-label="Album title"
                 data-testid="input-album-title"
                 maxLength={48}
