@@ -554,7 +554,12 @@ function PhotoDetail() {
           <h2 className="related-title">Related pictures</h2>
           <div className="related-grid">
             {relatedPhotos.map((relatedPhoto, index) => (
-              <figure key={relatedPhoto.src} className="related-card" data-testid={`card-related-${photo.id}-${index + 1}`}>
+              <figure
+                key={relatedPhoto.src}
+                className="related-card"
+                data-parent-photo={photo.id}
+                data-testid={`card-related-${photo.id}-${index + 1}`}
+              >
                 <div className="related-frame">
                   <img src={relatedPhoto.src} alt={relatedPhoto.title} referrerPolicy="no-referrer" />
                 </div>

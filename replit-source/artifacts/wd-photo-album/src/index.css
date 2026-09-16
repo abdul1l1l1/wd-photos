@@ -158,9 +158,46 @@ textarea.field-input { resize: vertical; line-height: 1.5; font-family: inherit;
 .related-card { display: block; margin: 0; border-radius: 10px; overflow: hidden; background: #151515; transition: transform .3s; }
 .related-card:hover { transform: translateY(-4px); }
 .related-frame { aspect-ratio: 16 / 9; overflow: hidden; }
-.related-frame img { width: 100%; height: 100%; object-fit: cover; filter: saturate(.8); transition: filter .3s, transform .5s; }
-.related-card:hover .related-frame img { filter: saturate(1); transform: scale(1.05); }
+.related-frame img { width: 100%; height: 100%; object-fit: cover; filter: var(--related-filter, saturate(.8)); transition: filter .3s, transform .5s; }
+.related-card:hover .related-frame img { filter: var(--related-hover-filter, saturate(1)); transform: scale(1.05); }
 .related-caption { padding: 13px 14px 15px; color: #edeade; font: 10px var(--app-font-mono); letter-spacing: .08em; text-transform: uppercase; }
+
+.related-card[data-parent-photo="1"] {
+  --related-filter: sepia(.18) saturate(.82) contrast(.96) brightness(.94);
+  --related-hover-filter: sepia(.12) saturate(.94) contrast(1) brightness(1);
+}
+.related-card[data-parent-photo="2"] {
+  --related-filter: brightness(.56) saturate(.48) contrast(1.16) hue-rotate(8deg);
+  --related-hover-filter: brightness(.66) saturate(.58) contrast(1.13) hue-rotate(8deg);
+}
+.related-card[data-parent-photo="3"] {
+  --related-filter: brightness(.63) saturate(.72) contrast(1.14);
+  --related-hover-filter: brightness(.72) saturate(.84) contrast(1.12);
+}
+.related-card[data-parent-photo="4"] {
+  --related-filter: brightness(.7) saturate(.5) contrast(1.1);
+  --related-hover-filter: brightness(.78) saturate(.62) contrast(1.08);
+}
+.related-card[data-parent-photo="5"] {
+  --related-filter: sepia(.42) saturate(.72) brightness(.84) contrast(1.08);
+  --related-hover-filter: sepia(.32) saturate(.82) brightness(.92) contrast(1.06);
+}
+.related-card[data-parent-photo="6"] {
+  --related-filter: grayscale(.74) brightness(.58) contrast(1.25);
+  --related-hover-filter: grayscale(.62) brightness(.68) contrast(1.2);
+}
+.related-card[data-parent-photo="7"] {
+  --related-filter: sepia(.3) saturate(1.02) brightness(.76) contrast(1.08);
+  --related-hover-filter: sepia(.24) saturate(1.12) brightness(.85) contrast(1.06);
+}
+.related-card[data-parent-photo="8"] {
+  --related-filter: grayscale(.92) contrast(1.34) brightness(.86);
+  --related-hover-filter: grayscale(.84) contrast(1.28) brightness(.94);
+}
+.related-card[data-parent-photo="9"] {
+  --related-filter: saturate(.58) brightness(.87) contrast(.96);
+  --related-hover-filter: saturate(.7) brightness(.94) contrast(1);
+}
 
 @media (max-width: 800px) {
   .page-wrap { width:min(100% - 30px, 620px); }

@@ -10,7 +10,7 @@ export type Album = { title: string; photos: Photo[] };
 export const STORAGE_KEY = 'wd-photo-album-v1';
 export const STORAGE_DIRTY_KEY = 'wd-photo-album-unsynced';
 const PHOTO_COPY_VERSION_KEY = 'wd-photo-album-copy-version';
-const PHOTO_COPY_VERSION = '5';
+const PHOTO_COPY_VERSION = '6';
 
 export const starterAlbum: Album = {
   title: 'WD Photo',
