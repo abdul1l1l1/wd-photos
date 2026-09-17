@@ -10,12 +10,12 @@ export type Album = { title: string; photos: Photo[] };
 export const STORAGE_KEY = 'wd-photo-album-v1';
 export const STORAGE_DIRTY_KEY = 'wd-photo-album-unsynced';
 const PHOTO_COPY_VERSION_KEY = 'wd-photo-album-copy-version';
-const PHOTO_COPY_VERSION = '9';
+const PHOTO_COPY_VERSION = '10';
 
 export const starterAlbum: Album = {
   title: 'WD Photo',
   photos: [
-    { id: 1, src: '/images/restored-photo-01-v2.jpg', caption: 'Autumn', description: 'A tree-lined path shows the seasonal color change of deciduous foliage. As chlorophyll breaks down in cooler weather, yellow and orange pigments become more visible before the leaves fall and return nutrients to the forest floor.' },
+    { id: 1, src: '/images/restored-photo-01-v2.jpg', caption: 'Autumn', description: 'A pale gravel path runs beneath a dense canopy of mature deciduous trees. Copper, russet, and amber leaves fill the branches and blanket the ground on both sides, while a small opening of pale sky and light draws the eye toward the quiet distance.' },
     { id: 2, src: '/images/restored-photo-02-v2.jpg', caption: 'Listening to Music', description: 'This collection of headphones, earbuds, cables, charging cases, and portable players represents several ways people listen to recorded audio. Wired equipment carries the signal through a physical connection, while wireless devices trade cables for rechargeable batteries and Bluetooth connectivity.' },
     { id: 3, src: '/images/restored-photo-03-v2.jpg', caption: 'Downtown San Diego', description: 'Downtown San Diego combines office towers, hotels, apartments, entertainment districts, and transportation corridors near San Diego Bay. After sunset, illuminated high-rises and moving traffic reveal the density and activity of the city center.' },
     { id: 4, src: '/images/restored-photo-04-v2.jpg', caption: 'Rainy Car Rides', description: 'Raindrops on a windshield scatter traffic lights into soft shapes and reduce contrast on the road ahead. Wet pavement also increases stopping distance, making slower speeds, greater following distance, and clear visibility especially important during a rainy drive.' },

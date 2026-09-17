@@ -26,9 +26,9 @@ import {
 type RelatedPhoto = { src: string; title: string };
 const relatedPhotosById: Record<number, RelatedPhoto[]> = {
   1: [
-    { src: '/images/context-01-01-v2.jpg', title: 'Path through fall color' },
-    { src: '/images/context-01-02-v2.jpg', title: 'Leaves across the woodland' },
-    { src: '/images/context-01-03-v2.jpg', title: 'Autumn trail' },
+    { src: '/images/autumn-victorian-house-v2.jpg', title: 'Autumn Victorian house' },
+    { src: '/images/autumn-new-england-street-v2.jpg', title: 'Salem-inspired autumn street' },
+    { src: '/images/autumn-brick-downtown-v2.jpg', title: 'Autumn brick downtown' },
   ],
   2: [
     { src: '/images/context-02-01-v2.jpg', title: 'Over-ear listening' },
