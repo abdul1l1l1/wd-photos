@@ -113,6 +113,38 @@ test('an existing locally stored album is never replaced by late server hydratio
   assert.equal(reconciled.album, localAlbum);
 });
 
+test('the supplied fifth photo replaces any cached fifth-photo variant', () => {
+  const cachedAlbum = {
+    ...starterAlbum,
+    photos: starterAlbum.photos.map((photo) =>
+      photo.id === 5
+        ? {
+            ...photo,
+            src: 'data:image/jpeg;base64,cached-photo',
+            caption: 'Beneath the Manhattan Bridge',
+            description: 'The old bridge description.',
+          }
+        : photo,
+    ),
+  };
+
+  const storageValues = new Map<string, string>([
+    [STORAGE_KEY, JSON.stringify(cachedAlbum)],
+    ['wd-photo-album-copy-version', '7'],
+  ]);
+  const storage = {
+    getItem: (key: string) => storageValues.get(key) ?? null,
+    setItem: (key: string, value: string) => storageValues.set(key, value),
+  };
+
+  const migrated = readAlbum(storage);
+  const fifthPhoto = migrated.photos.find((photo) => photo.id === 5);
+
+  assert.equal(fifthPhoto?.src, '/images/photo-05-v3.jpg');
+  assert.equal(fifthPhoto?.caption, 'I AM MUSIC');
+  assert.match(fifthPhoto?.description ?? '', /album cover/);
+});
+
 test('an existing unsynced blank survives a pre-hydration edit and revert', () => {
   const dirtyLocalAlbum = {
     ...starterAlbum,

@@ -10,7 +10,7 @@ export type Album = { title: string; photos: Photo[] };
 export const STORAGE_KEY = 'wd-photo-album-v1';
 export const STORAGE_DIRTY_KEY = 'wd-photo-album-unsynced';
 const PHOTO_COPY_VERSION_KEY = 'wd-photo-album-copy-version';
-const PHOTO_COPY_VERSION = '7';
+const PHOTO_COPY_VERSION = '8';
 
 export const starterAlbum: Album = {
   title: 'WD Photo',
@@ -48,20 +48,19 @@ export function normalizeAlbum(album: StoredAlbum, upgradePhotoCopy = false): Al
       const shouldUpgradeCopy =
         upgradePhotoCopy &&
         Boolean(starter) &&
-        Boolean(legacy) &&
-        legacy?.srcs.includes(photo.src) === true;
+        (photo.id === 5 || (Boolean(legacy) && legacy?.srcs.includes(photo.src) === true));
 
       return {
         ...photo,
         src: shouldUpgradeCopy ? starter?.src ?? photo.src : photo.src,
         caption:
-          shouldUpgradeCopy && legacy?.captions.includes(photo.caption)
+          shouldUpgradeCopy && (photo.id === 5 || legacy?.captions.includes(photo.caption))
             ? starter?.caption ?? photo.caption
             : photo.caption,
         description:
           typeof photo.description !== 'string'
             ? starter?.description ?? ''
-            : shouldUpgradeCopy && legacy?.descriptions.includes(photo.description)
+            : shouldUpgradeCopy && (photo.id === 5 || legacy?.descriptions.includes(photo.description))
               ? starter?.description ?? photo.description
               : photo.description,
       };
