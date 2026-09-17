@@ -142,7 +142,7 @@ test('the supplied fifth photo replaces any cached fifth-photo variant', () => {
 
   assert.equal(fifthPhoto?.src, '/images/photo-05-v3.jpg');
   assert.equal(fifthPhoto?.caption, 'I AM MUSIC');
-  assert.match(fifthPhoto?.description ?? '', /album cover/);
+  assert.equal(fifthPhoto?.description, 'I AM MUSIC BY PLAYBOI CARTI');
 });
 
 test('an existing unsynced blank survives a pre-hydration edit and revert', () => {

@@ -47,9 +47,9 @@ const relatedPhotosById: Record<number, RelatedPhoto[]> = {
     { src: '/images/context-04-03-v2.jpg', title: 'Night drive in rain' },
   ],
   5: [
-    { src: '/images/context-02-01-v2.jpg', title: 'Over-ear listening' },
-    { src: '/images/context-02-02-v2.jpg', title: 'Music on the move' },
-    { src: '/images/context-02-03-v2.jpg', title: 'Portable audio' },
+    { src: '/images/xo-tour-lif3-v2.jpg', title: 'XO Tour Llif3' },
+    { src: '/images/fuck-it-up-v2.jpg', title: 'Fuck It Up — Mike Sherm' },
+    { src: '/images/shoota-v2.jpg', title: 'Shoota — Playboi Carti' },
   ],
   6: [
     { src: '/images/related-06-01.jpg', title: 'Cut to sky' },

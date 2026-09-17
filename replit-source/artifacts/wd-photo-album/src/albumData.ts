@@ -10,7 +10,7 @@ export type Album = { title: string; photos: Photo[] };
 export const STORAGE_KEY = 'wd-photo-album-v1';
 export const STORAGE_DIRTY_KEY = 'wd-photo-album-unsynced';
 const PHOTO_COPY_VERSION_KEY = 'wd-photo-album-copy-version';
-const PHOTO_COPY_VERSION = '8';
+const PHOTO_COPY_VERSION = '9';
 
 export const starterAlbum: Album = {
   title: 'WD Photo',
@@ -19,7 +19,7 @@ export const starterAlbum: Album = {
     { id: 2, src: '/images/restored-photo-02-v2.jpg', caption: 'Listening to Music', description: 'This collection of headphones, earbuds, cables, charging cases, and portable players represents several ways people listen to recorded audio. Wired equipment carries the signal through a physical connection, while wireless devices trade cables for rechargeable batteries and Bluetooth connectivity.' },
     { id: 3, src: '/images/restored-photo-03-v2.jpg', caption: 'Downtown San Diego', description: 'Downtown San Diego combines office towers, hotels, apartments, entertainment districts, and transportation corridors near San Diego Bay. After sunset, illuminated high-rises and moving traffic reveal the density and activity of the city center.' },
     { id: 4, src: '/images/restored-photo-04-v2.jpg', caption: 'Rainy Car Rides', description: 'Raindrops on a windshield scatter traffic lights into soft shapes and reduce contrast on the road ahead. Wet pavement also increases stopping distance, making slower speeds, greater following distance, and clear visibility especially important during a rainy drive.' },
-    { id: 5, src: '/images/photo-05-v3.jpg', caption: 'I AM MUSIC', description: 'A stark black album cover places the words “I AM MUSIC” in tall white type above a parental advisory label, turning the cover into a minimal statement about sound and identity.' },
+    { id: 5, src: '/images/photo-05-v3.jpg', caption: 'I AM MUSIC', description: 'I AM MUSIC BY PLAYBOI CARTI' },
     { id: 6, src: '/images/restored-photo-06-v2.jpg', caption: 'Open Octagon', description: 'Dark structural beams form a precise octagonal frame around a bright opening, drawing the eye upward toward a clear and nearly featureless sky.' },
     { id: 7, src: '/images/photo-07.jpg', caption: 'Lantern hour', description: 'Dusk settling in, warm glow illuminating the evening as the day winds down.' },
     { id: 8, src: '/images/photo-08.jpg', caption: 'Hard light', description: 'Sharp contrasts created by the unforgiving midday sun, highlighting every detail.' },
