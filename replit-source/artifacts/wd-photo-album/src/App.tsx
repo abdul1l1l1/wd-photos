@@ -47,9 +47,9 @@ const relatedPhotosById: Record<number, RelatedPhoto[]> = {
     { src: '/images/context-04-03-v2.jpg', title: 'Night drive in rain' },
   ],
   5: [
-    { src: '/images/context-05-01-v2.jpg', title: 'Manhattan Bridge from DUMBO' },
-    { src: '/images/context-05-02-v2.jpg', title: 'Under the steel span' },
-    { src: '/images/context-05-03-v2.jpg', title: 'Bridge between brick streets' },
+    { src: '/images/context-02-01-v2.jpg', title: 'Over-ear listening' },
+    { src: '/images/context-02-02-v2.jpg', title: 'Music on the move' },
+    { src: '/images/context-02-03-v2.jpg', title: 'Portable audio' },
   ],
   6: [
     { src: '/images/related-06-01.jpg', title: 'Cut to sky' },

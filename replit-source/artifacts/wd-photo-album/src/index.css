@@ -179,8 +179,8 @@ textarea.field-input { resize: vertical; line-height: 1.5; font-family: inherit;
   --related-hover-filter: brightness(.78) saturate(.62) contrast(1.08);
 }
 .related-card[data-parent-photo="5"] {
-  --related-filter: sepia(.42) saturate(.72) brightness(.84) contrast(1.08);
-  --related-hover-filter: sepia(.32) saturate(.82) brightness(.92) contrast(1.06);
+  --related-filter: grayscale(.82) brightness(.62) contrast(1.2);
+  --related-hover-filter: grayscale(.72) brightness(.72) contrast(1.16);
 }
 .related-card[data-parent-photo="6"] {
   --related-filter: grayscale(.74) brightness(.58) contrast(1.25);
