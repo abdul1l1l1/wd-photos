@@ -11,19 +11,19 @@
       "id": 2,
       "src": "/images/restored-photo-02-v2.jpg",
       "caption": "Listening to Music",
-      "description": "A dark tabletop holds over-ear headphones, wired earbuds, charging cases, and small portable players. The mix of cables, batteries, and compact devices traces how recorded music moves from a retro cassette deck to everyday listening."
+      "description": "Headphones, earbuds, and portable players sit together on a dark tabletop."
     },
     {
       "id": 3,
       "src": "/images/restored-photo-03-v2.jpg",
       "caption": "Downtown San Diego",
-      "description": "Downtown San Diego shifts between bright waterfront lights and the soft gray of the marine layer. High-rises, palm-lined streets, and wet pavement hold the city in a moody coastal atmosphere, whether the skyline is glowing after dark or disappearing into low clouds."
+      "description": "Downtown San Diego lights up beneath a dark, cloudy sky."
     },
     {
       "id": 4,
       "src": "/images/restored-photo-04-v2.jpg",
       "caption": "Rainlit Drive",
-      "description": "A night drive unfolds behind rain-streaked glass, with brake lights, streetlamps, and wet pavement dissolving into red and amber reflections. From the quiet passenger seat to the open road ahead, the city feels distant, enclosed, and slow."
+      "description": "Rain and city lights blur together during a quiet night drive."
     },
     {
       "id": 5,
@@ -35,25 +35,25 @@
       "id": 6,
       "src": "/images/photo-06-night-walk-pexels.jpg",
       "caption": "Night Walk",
-      "description": "Two silhouettes walk down a wet wooden path toward a lively city intersection at night. Streetlights, headlights, and glowing windows gather around the dark figures, turning an ordinary walk into a quiet view of the city after sunset."
+      "description": "Two people walk toward the city on a rainy night."
     },
     {
       "id": 7,
       "src": "/images/photo-07.jpg",
       "caption": "Lantern hour",
-      "description": "Dusk settling in, warm glow illuminating the evening as the day winds down."
+      "description": "A lantern glows as the evening begins."
     },
     {
       "id": 8,
       "src": "/images/photo-08.jpg",
       "caption": "Hard light",
-      "description": "Sharp contrasts created by the unforgiving midday sun, highlighting every detail."
+      "description": "Bright sunlight cuts across the scene."
     },
     {
       "id": 9,
       "src": "/images/photo-09.jpg",
       "caption": "Edge of water",
-      "description": "Where the land meets the calm surface, reflecting the sky in a perfect mirror."
+      "description": "Calm water meets the edge of the land."
     }
   ],
   "lastSyncedAt": null
