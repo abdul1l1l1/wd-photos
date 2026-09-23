@@ -118,6 +118,31 @@ export function albumAfterServerLoad(
   return hasUnsyncedLocalChanges ? localAlbum : serverAlbum;
 }
 
+function isKnownLegacyPhotoValue(localPhoto: Photo, serverPhoto: Photo): boolean {
+  const legacy = legacyPhotoCopy.get(localPhoto.id);
+  if (!legacy || localPhoto.id !== serverPhoto.id) return false;
+
+  return (
+    (localPhoto.src === serverPhoto.src || legacy.srcs.includes(localPhoto.src)) &&
+    (localPhoto.caption === serverPhoto.caption || legacy.captions.includes(localPhoto.caption)) &&
+    (localPhoto.description === serverPhoto.description || legacy.descriptions.includes(localPhoto.description))
+  );
+}
+
+function localAlbumOnlyContainsKnownLegacyCopy(localAlbum: Album, serverAlbum: Album): boolean {
+  if (localAlbum.title !== serverAlbum.title || localAlbum.photos.length !== serverAlbum.photos.length) {
+    return false;
+  }
+
+  return localAlbum.photos.every((localPhoto) => {
+    const serverPhoto = serverAlbum.photos.find((photo) => photo.id === localPhoto.id);
+    return Boolean(serverPhoto) && (
+      JSON.stringify(localPhoto) === JSON.stringify(serverPhoto) ||
+      isKnownLegacyPhotoValue(localPhoto, serverPhoto)
+    );
+  });
+}
+
 export function reconcileAlbumAfterServerLoad(
   localAlbum: Album,
   serverAlbum: Album,
@@ -126,7 +151,8 @@ export function reconcileAlbumAfterServerLoad(
 ): { album: Album; hasUnsyncedLocalChanges: boolean } {
   const hasUnsyncedLocalChanges =
     (wasMarkedUnsynced || hasStoredLocalAlbum) &&
-    !albumsEqual(localAlbum, serverAlbum);
+    !albumsEqual(localAlbum, serverAlbum) &&
+    !localAlbumOnlyContainsKnownLegacyCopy(localAlbum, serverAlbum);
   return {
     album: albumAfterServerLoad(
       localAlbum,
