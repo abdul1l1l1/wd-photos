@@ -36,9 +36,9 @@ const relatedPhotosById: Record<number, RelatedPhoto[]> = {
     { src: '/images/retro-portable-player-v2.jpg', title: 'Portable listening' },
   ],
   3: [
-    { src: '/images/san-diego-bay-night-v2.jpg', title: 'San Diego bay lights' },
-    { src: '/images/san-diego-street-night-v2.jpg', title: 'Downtown street after dark' },
-    { src: '/images/san-diego-skyline-night-v2.jpg', title: 'San Diego skyline at night' },
+    { src: '/images/san-diego-downtown-night-v3.jpg', title: 'Downtown skyline after dark' },
+    { src: '/images/san-diego-gloomy-clouds-v3.jpg', title: 'San Diego under marine-layer clouds' },
+    { src: '/images/san-diego-downtown-street-v3.jpg', title: 'Rainy downtown street at night' },
   ],
   4: [
     { src: '/images/rainy-windshield-night-v2.jpg', title: 'Rain through the windshield' },
