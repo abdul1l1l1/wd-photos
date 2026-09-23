@@ -41,9 +41,9 @@ const relatedPhotosById: Record<number, RelatedPhoto[]> = {
     { src: '/images/san-diego-downtown-street-v3.jpg', title: 'Rainy downtown street at night' },
   ],
   4: [
-    { src: '/images/rainy-windshield-night-v2.jpg', title: 'Rain through the windshield' },
-    { src: '/images/rainy-dashboard-drive-v2.jpg', title: 'Dashboard in the rain' },
-    { src: '/images/rainy-road-lights-v2.jpg', title: 'Wet road and taillights' },
+    { src: '/images/rainy-windshield-drive-v3.jpg', title: 'Traffic through a rain-streaked windshield' },
+    { src: '/images/rainy-city-passenger-v3.jpg', title: 'City lights from the passenger seat' },
+    { src: '/images/rainy-road-midnight-v3.jpg', title: 'Wet road after midnight' },
   ],
   5: [
     { src: '/images/xo-tour-lif3-v2.jpg', title: 'XO Tour Llif3' },
