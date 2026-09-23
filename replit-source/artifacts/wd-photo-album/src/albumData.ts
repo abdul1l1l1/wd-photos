@@ -136,7 +136,8 @@ function localAlbumOnlyContainsKnownLegacyCopy(localAlbum: Album, serverAlbum: A
 
   return localAlbum.photos.every((localPhoto) => {
     const serverPhoto = serverAlbum.photos.find((photo) => photo.id === localPhoto.id);
-    return Boolean(serverPhoto) && (
+    if (!serverPhoto) return false;
+    return (
       JSON.stringify(localPhoto) === JSON.stringify(serverPhoto) ||
       isKnownLegacyPhotoValue(localPhoto, serverPhoto)
     );
