@@ -113,6 +113,31 @@ test('an existing locally stored album is never replaced by late server hydratio
   assert.equal(reconciled.album, localAlbum);
 });
 
+test('a stale locally stored starter copy is replaced by the newer server copy', () => {
+  const staleLocalAlbum = {
+    ...starterAlbum,
+    photos: starterAlbum.photos.map((photo) =>
+      photo.id === 1
+        ? {
+            ...photo,
+            caption: 'Autumn Passage',
+            description: 'A pale gravel path disappears into a tunnel of copper and rust-colored trees, with fallen leaves gathering along the quiet woodland trail.',
+          }
+        : photo,
+    ),
+  };
+
+  const reconciled = reconcileAlbumAfterServerLoad(
+    staleLocalAlbum,
+    starterAlbum,
+    true,
+    true,
+  );
+
+  assert.equal(reconciled.hasUnsyncedLocalChanges, false);
+  assert.equal(reconciled.album, starterAlbum);
+});
+
 test('the supplied fifth photo replaces any cached fifth-photo variant', () => {
   const cachedAlbum = {
     ...starterAlbum,
