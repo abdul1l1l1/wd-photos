@@ -166,7 +166,7 @@ test('a cached legacy description with the current caption is migrated', () => {
     migrated.photos.find((photo) => photo.id === 1)?.description,
     starterAlbum.photos.find((photo) => photo.id === 1)?.description,
   );
-  assert.equal(storageValues.get('wd-photo-album-copy-version'), '20');
+  assert.equal(storageValues.get('wd-photo-album-copy-version'), '21');
 });
 
 test('a cached legacy GitHub image URL is migrated to the synced asset', () => {
@@ -197,7 +197,7 @@ test('a cached legacy GitHub image URL is migrated to the synced asset', () => {
 
   assert.equal(firstPhoto?.src, starterAlbum.photos.find((photo) => photo.id === 1)?.src);
   assert.equal(firstPhoto?.description, starterAlbum.photos.find((photo) => photo.id === 1)?.description);
-  assert.equal(storageValues.get('wd-photo-album-copy-version'), '20');
+  assert.equal(storageValues.get('wd-photo-album-copy-version'), '21');
 });
 
 test('a cached Photo 4 starter caption and description migrate to the updated copy', () => {
@@ -230,7 +230,70 @@ test('a cached Photo 4 starter caption and description migrate to the updated co
     fourthPhoto?.description,
     'Riding late at night around the city or country area with friends playing music',
   );
-  assert.equal(storageValues.get('wd-photo-album-copy-version'), '20');
+  assert.equal(storageValues.get('wd-photo-album-copy-version'), '21');
+});
+
+test('a cached Autumn description updates without replacing its image', () => {
+  const externalImage = 'https://example.com/autumn-house.jpg';
+  const staleLocalAlbum = {
+    ...starterAlbum,
+    photos: starterAlbum.photos.map((photo) =>
+      photo.id === 1
+        ? {
+            ...photo,
+            src: externalImage,
+            description: 'A quiet path winds through trees covered in autumn leaves.',
+          }
+        : photo,
+    ),
+  };
+  const storageValues = new Map<string, string>([
+    [STORAGE_KEY, JSON.stringify(staleLocalAlbum)],
+    ['wd-photo-album-copy-version', '20'],
+  ]);
+  const storage = {
+    getItem: (key: string) => storageValues.get(key) ?? null,
+    setItem: (key: string, value: string) => storageValues.set(key, value),
+  };
+
+  const migrated = readAlbum(storage);
+  const autumnPhoto = migrated.photos.find((photo) => photo.id === 1);
+
+  assert.equal(autumnPhoto?.src, externalImage);
+  assert.equal(autumnPhoto?.caption, 'Autumn');
+  assert.equal(autumnPhoto?.description, 'Parked cars line a quiet street under autumn trees.');
+  assert.equal(storageValues.get('wd-photo-album-copy-version'), '21');
+});
+
+test('the previous Autumn thumbnail migrates to the latest saved image', () => {
+  const previousImage =
+    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQKD8eoSJRpJKWnXAl4O_vC-DEBikttkR8ET6n8Qn29jg&s=10';
+  const staleLocalAlbum = {
+    ...starterAlbum,
+    photos: starterAlbum.photos.map((photo) =>
+      photo.id === 1
+        ? {
+            ...photo,
+            src: previousImage,
+            description: 'A quiet path winds through trees covered in autumn leaves.',
+          }
+        : photo,
+    ),
+  };
+  const storageValues = new Map<string, string>([
+    [STORAGE_KEY, JSON.stringify(staleLocalAlbum)],
+    ['wd-photo-album-copy-version', '20'],
+  ]);
+  const storage = {
+    getItem: (key: string) => storageValues.get(key) ?? null,
+    setItem: (key: string, value: string) => storageValues.set(key, value),
+  };
+
+  const migrated = readAlbum(storage);
+  const autumnPhoto = migrated.photos.find((photo) => photo.id === 1);
+
+  assert.equal(autumnPhoto?.src, starterAlbum.photos.find((photo) => photo.id === 1)?.src);
+  assert.equal(autumnPhoto?.description, 'Parked cars line a quiet street under autumn trees.');
 });
 
 test('legacy copy migrates without replacing a newer external image', () => {
@@ -287,7 +350,7 @@ test('legacy copy migrates without replacing a newer external image', () => {
     assert.equal(migratedPhoto?.caption, starter?.caption);
     assert.equal(migratedPhoto?.description, starter?.description);
   }
-  assert.equal(storageValues.get('wd-photo-album-copy-version'), '20');
+  assert.equal(storageValues.get('wd-photo-album-copy-version'), '21');
 });
 
 test('the supplied fifth photo replaces any cached fifth-photo variant', () => {
