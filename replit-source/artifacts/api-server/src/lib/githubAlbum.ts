@@ -44,7 +44,7 @@ type GitTree = {
 const starterAlbum: AlbumDocument = {
   title: "WD Photo",
   photos: [
-    { id: 1, src: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQKD8eoSJRpJKWnXAl4O_vC-DEBikttkR8ET6n8Qn29jg&s=10", caption: "Autumn", description: "A quiet path winds through trees covered in autumn leaves." },
+    { id: 1, src: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRp28dLlaC0301ijoAXtehqgrUxHVB1acpMzshP5bKNOg&s=10", caption: "Autumn", description: "Parked cars line a quiet street under autumn trees." },
     { id: 2, src: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSZ1xsi8usawr0jU8aJ1TyqUSlY_BMpeVKYIsQkBzoaag&s=10", caption: "Listening to Music", description: "Headphones, earbuds, and portable players sit together on a dark tabletop." },
     { id: 3, src: "/images/restored-photo-03-v2.jpg", caption: "Downtown San Diego", description: "Downtown San Diego lights up beneath a dark, cloudy sky." },
     { id: 4, src: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQB9lRiXh4ut2QMhXFltcZqCF4Ao3Gnj_sJG9iRYS1fNw&s=10", caption: "Late Night Rides", description: "Riding late at night around the city or country area with friends playing music" },
