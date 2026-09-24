@@ -166,7 +166,7 @@ test('a cached legacy description with the current caption is migrated', () => {
     migrated.photos.find((photo) => photo.id === 1)?.description,
     starterAlbum.photos.find((photo) => photo.id === 1)?.description,
   );
-  assert.equal(storageValues.get('wd-photo-album-copy-version'), '19');
+  assert.equal(storageValues.get('wd-photo-album-copy-version'), '20');
 });
 
 test('a cached legacy GitHub image URL is migrated to the synced asset', () => {
@@ -197,7 +197,7 @@ test('a cached legacy GitHub image URL is migrated to the synced asset', () => {
 
   assert.equal(firstPhoto?.src, starterAlbum.photos.find((photo) => photo.id === 1)?.src);
   assert.equal(firstPhoto?.description, starterAlbum.photos.find((photo) => photo.id === 1)?.description);
-  assert.equal(storageValues.get('wd-photo-album-copy-version'), '19');
+  assert.equal(storageValues.get('wd-photo-album-copy-version'), '20');
 });
 
 test('a cached Photo 4 starter caption and description migrate to the updated copy', () => {
@@ -230,7 +230,64 @@ test('a cached Photo 4 starter caption and description migrate to the updated co
     fourthPhoto?.description,
     'Riding late at night around the city or country area with friends playing music',
   );
-  assert.equal(storageValues.get('wd-photo-album-copy-version'), '19');
+  assert.equal(storageValues.get('wd-photo-album-copy-version'), '20');
+});
+
+test('legacy copy migrates without replacing a newer external image', () => {
+  const legacyValues = [
+    {
+      id: 1,
+      caption: 'Autumn Passage',
+      description:
+        'A pale gravel path disappears into a tunnel of copper and rust-colored trees, with fallen leaves gathering along the quiet woodland trail.',
+    },
+    {
+      id: 4,
+      caption: 'Rainy Car Rides',
+      description:
+        'Rain covers the windshield and breaks the road ahead into soft amber and red shapes. The wiper edge cuts across the glass while blurred traffic and wet pavement make the car’s slow, enclosed nighttime ride feel private and cinematic.',
+    },
+    {
+      id: 6,
+      caption: 'Open Octagon',
+      description:
+        'Dark structural beams form a precise octagonal frame around a bright opening, drawing the eye upward toward a clear and nearly featureless sky.',
+    },
+  ];
+  const externalSources = new Map(
+    legacyValues.map(({ id }) => [
+      id,
+      `https://encrypted-tbn0.gstatic.com/images?photo=${id}`,
+    ]),
+  );
+  const staleAlbum = {
+    ...starterAlbum,
+    photos: starterAlbum.photos.map((photo) => {
+      const legacy = legacyValues.find((candidate) => candidate.id === photo.id);
+      return legacy
+        ? { ...photo, src: externalSources.get(photo.id)!, ...legacy }
+        : photo;
+    }),
+  };
+  const storageValues = new Map<string, string>([
+    [STORAGE_KEY, JSON.stringify(staleAlbum)],
+    ['wd-photo-album-copy-version', '19'],
+  ]);
+  const storage = {
+    getItem: (key: string) => storageValues.get(key) ?? null,
+    setItem: (key: string, value: string) => storageValues.set(key, value),
+  };
+
+  const migrated = readAlbum(storage);
+
+  for (const legacy of legacyValues) {
+    const migratedPhoto = migrated.photos.find((photo) => photo.id === legacy.id);
+    const starter = starterAlbum.photos.find((photo) => photo.id === legacy.id);
+    assert.equal(migratedPhoto?.src, externalSources.get(legacy.id));
+    assert.equal(migratedPhoto?.caption, starter?.caption);
+    assert.equal(migratedPhoto?.description, starter?.description);
+  }
+  assert.equal(storageValues.get('wd-photo-album-copy-version'), '20');
 });
 
 test('the supplied fifth photo replaces any cached fifth-photo variant', () => {

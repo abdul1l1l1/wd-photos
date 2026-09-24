@@ -10,17 +10,17 @@ export type Album = { title: string; photos: Photo[] };
 export const STORAGE_KEY = 'wd-photo-album-v1';
 export const STORAGE_DIRTY_KEY = 'wd-photo-album-unsynced';
 const PHOTO_COPY_VERSION_KEY = 'wd-photo-album-copy-version';
-const PHOTO_COPY_VERSION = '19';
+const PHOTO_COPY_VERSION = '20';
 
 export const starterAlbum: Album = {
   title: 'WD Photo',
   photos: [
-    { id: 1, src: '/images/restored-photo-01-v2.jpg', caption: 'Autumn', description: 'A quiet path winds through trees covered in autumn leaves.' },
-    { id: 2, src: '/images/restored-photo-02-v2.jpg', caption: 'Listening to Music', description: 'Headphones, earbuds, and portable players sit together on a dark tabletop.' },
+    { id: 1, src: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQKD8eoSJRpJKWnXAl4O_vC-DEBikttkR8ET6n8Qn29jg&s=10', caption: 'Autumn', description: 'A quiet path winds through trees covered in autumn leaves.' },
+    { id: 2, src: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSZ1xsi8usawr0jU8aJ1TyqUSlY_BMpeVKYIsQkBzoaag&s=10', caption: 'Listening to Music', description: 'Headphones, earbuds, and portable players sit together on a dark tabletop.' },
     { id: 3, src: '/images/restored-photo-03-v2.jpg', caption: 'Downtown San Diego', description: 'Downtown San Diego lights up beneath a dark, cloudy sky.' },
-    { id: 4, src: '/images/restored-photo-04-v2.jpg', caption: 'Late Night Rides', description: 'Riding late at night around the city or country area with friends playing music' },
+    { id: 4, src: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQB9lRiXh4ut2QMhXFltcZqCF4Ao3Gnj_sJG9iRYS1fNw&s=10', caption: 'Late Night Rides', description: 'Riding late at night around the city or country area with friends playing music' },
     { id: 5, src: '/images/photo-05-v3.jpg', caption: 'I AM MUSIC', description: 'I AM MUSIC BY PLAYBOI CARTI' },
-    { id: 6, src: '/images/photo-06-night-walk-pexels.jpg', caption: 'Night Walk', description: 'Two people walk toward the city on a rainy night.' },
+    { id: 6, src: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT3-X2dAXxFx6IwPXnervcG88j3oP117WllaMEmj9d8sg&s=10', caption: 'Night Walk', description: 'Two people walk toward the city on a rainy night.' },
     { id: 7, src: '/images/photo-07.jpg', caption: 'Lantern hour', description: 'A lantern glows as the evening begins.' },
     { id: 8, src: '/images/photo-08.jpg', caption: 'Hard light', description: 'Bright sunlight cuts across the scene.' },
     { id: 9, src: '/images/photo-09.jpg', caption: 'Edge of water', description: 'Calm water meets the edge of the land.' },
@@ -48,14 +48,24 @@ export function normalizeAlbum(album: StoredAlbum, upgradePhotoCopy = false): Al
     photos: album.photos.map((photo) => {
       const starter = starterAlbum.photos.find((candidate) => candidate.id === photo.id);
       const legacy = legacyPhotoCopy.get(photo.id);
+      const matchesLegacySource =
+        legacy?.srcs.some((src) => sourceMatchesLegacy(photo.src, src)) === true;
+      const hasLegacyCaption = legacy?.captions.includes(photo.caption) === true;
+      const hasLegacyDescription =
+        typeof photo.description === 'string' &&
+        legacy?.descriptions.includes(photo.description) === true;
       const shouldUpgradeCopy =
         upgradePhotoCopy &&
         Boolean(starter) &&
-        (photo.id === 5 || (Boolean(legacy) && legacy?.srcs.some((src) => sourceMatchesLegacy(photo.src, src)) === true));
+        (photo.id === 5 || matchesLegacySource || hasLegacyCaption || hasLegacyDescription);
+      const shouldUpgradeImage =
+        upgradePhotoCopy &&
+        Boolean(starter) &&
+        (photo.id === 5 || matchesLegacySource);
 
       return {
         ...photo,
-        src: shouldUpgradeCopy ? starter?.src ?? photo.src : photo.src,
+        src: shouldUpgradeImage ? starter?.src ?? photo.src : photo.src,
         caption:
           shouldUpgradeCopy && (photo.id === 5 || legacy?.captions.includes(photo.caption))
             ? starter?.caption ?? photo.caption
