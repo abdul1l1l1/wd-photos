@@ -3,7 +3,7 @@
   "photos": [
     {
       "id": 1,
-      "src": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQKD8eoSJRpJKWnXAl4O_vC-DEBikttkR8ET6n8Qn29jg&s=10",
+      "src": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRPaFLIpOSK_CCHub07bhbxRiHL3hLUvSJ29MuCFGFruw&s=10",
       "caption": "Autumn",
       "description": "A quiet path winds through trees covered in autumn leaves."
     },
@@ -56,5 +56,5 @@
       "description": "Calm water meets the edge of the land."
     }
   ],
-  "lastSyncedAt": "2026-09-24T18:05:39.360Z"
+  "lastSyncedAt": "2026-09-24T18:08:11.115Z"
 }
