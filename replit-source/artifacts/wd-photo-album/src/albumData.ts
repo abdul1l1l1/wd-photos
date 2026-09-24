@@ -10,7 +10,7 @@ export type Album = { title: string; photos: Photo[] };
 export const STORAGE_KEY = 'wd-photo-album-v1';
 export const STORAGE_DIRTY_KEY = 'wd-photo-album-unsynced';
 const PHOTO_COPY_VERSION_KEY = 'wd-photo-album-copy-version';
-const PHOTO_COPY_VERSION = '16';
+const PHOTO_COPY_VERSION = '19';
 
 export const starterAlbum: Album = {
   title: 'WD Photo',
@@ -18,7 +18,7 @@ export const starterAlbum: Album = {
     { id: 1, src: '/images/restored-photo-01-v2.jpg', caption: 'Autumn', description: 'A quiet path winds through trees covered in autumn leaves.' },
     { id: 2, src: '/images/restored-photo-02-v2.jpg', caption: 'Listening to Music', description: 'Headphones, earbuds, and portable players sit together on a dark tabletop.' },
     { id: 3, src: '/images/restored-photo-03-v2.jpg', caption: 'Downtown San Diego', description: 'Downtown San Diego lights up beneath a dark, cloudy sky.' },
-    { id: 4, src: '/images/restored-photo-04-v2.jpg', caption: 'Rainlit Drive', description: 'Rain and city lights blur together during a quiet night drive.' },
+    { id: 4, src: '/images/restored-photo-04-v2.jpg', caption: 'Late Night Rides', description: 'Riding late at night around the city or country area with friends playing music' },
     { id: 5, src: '/images/photo-05-v3.jpg', caption: 'I AM MUSIC', description: 'I AM MUSIC BY PLAYBOI CARTI' },
     { id: 6, src: '/images/photo-06-night-walk-pexels.jpg', caption: 'Night Walk', description: 'Two people walk toward the city on a rainy night.' },
     { id: 7, src: '/images/photo-07.jpg', caption: 'Lantern hour', description: 'A lantern glows as the evening begins.' },
@@ -28,10 +28,10 @@ export const starterAlbum: Album = {
 };
 
 const legacyPhotoCopy = new Map([
-  [1, { srcs: ['/images/photo-01.jpg', '/images/restored-photo-01.jpg', '/images/restored-photo-01-v2.jpg'], captions: ['Upside-Down City', 'Autumn Passage'], descriptions: ['A narrow rain puddle turns the brick building across the street upside down, holding its windows and pointed roof inside a quiet strip of wet pavement.', 'A pale gravel path disappears into a tunnel of copper and rust-colored trees, with fallen leaves gathering along the quiet woodland trail.', 'A pale gravel path runs beneath a dense canopy of mature deciduous trees. Copper, russet, and amber leaves fill the branches and blanket the ground on both sides, while a small opening of pale sky and light draws the eye toward the quiet distance.'] }],
+  [1, { srcs: ['/images/photo-01.jpg', '/images/restored-photo-01.jpg', '/images/restored-photo-01-v2.jpg'], captions: ['Upside-Down City', 'Autumn Passage'], descriptions: ['A narrow rain puddle turns the brick building across the street upside down, holding its windows and pointed roof inside a quiet strip of wet pavement.', 'A pale gravel path disappears into a tunnel of copper and rust-colored trees, with fallen leaves gathering along the quiet woodland trail.', 'A pale gravel path runs beneath a dense canopy of mature deciduous trees. Copper, russet, and amber leaves fill the branches and blanket the ground on both sides, while a small opening of pale sky and light draws the eye toward the quiet distance.', 'A tree-lined path shows the seasonal color change of deciduous foliage. As chlorophyll breaks down in cooler weather, yellow and orange pigments become more visible.'] }],
   [2, { srcs: ['/images/photo-02.jpg', '/images/restored-photo-02.jpg', '/images/restored-photo-02-v2.jpg'], captions: ['One Line Above', 'Everyday Audio Kit'], descriptions: ['A charcoal wall cuts diagonally across a bright cyan sky while a single white contrail passes overhead, reducing the scene to color, scale, and one precise line.', 'Headphones, earbuds, charging cases, cables, and pocket-sized devices are arranged across dark fabric like the contents of a daily listening routine.', 'This collection of headphones, earbuds, cables, charging cases, and portable players represents several ways people listen to recorded audio. Wired equipment carries the signal through a physical connection, while wireless devices trade cables for rechargeable batteries and Bluetooth connectivity.', 'A dark tabletop holds over-ear headphones, wired earbuds, charging cases, and small portable players. The mix of cables, batteries, and compact devices traces how recorded music moves from a retro cassette deck to everyday listening.'] }],
   [3, { srcs: ['/images/photo-03.jpg', '/images/restored-photo-03.jpg', '/images/restored-photo-03-v2.jpg'], captions: ['Red Towers, Blue Sky', 'City After Dark'], descriptions: ['Two reflective skyscrapers rise from opposite corners, their warm red grids framing a vivid opening of blue sky and drifting white clouds.', 'A brightly illuminated skyline rises against the night, with glass towers, colorful lights, and flowing traffic defining the city after sunset.', 'Downtown San Diego combines office towers, hotels, apartments, entertainment districts, and transportation corridors near San Diego Bay. After sunset, illuminated high-rises and moving traffic reveal the density and activity of the city center.', 'Downtown San Diego is seen after dark from above, with illuminated towers, office windows, and blue-green accents rising against a hazy night sky. Streets and traffic lights form bright lines below, showing the city’s density after sunset.', 'Downtown San Diego shifts between bright waterfront lights and the soft gray of the marine layer. High-rises, palm-lined streets, and wet pavement hold the city in a moody coastal atmosphere, whether the skyline is glowing after dark or disappearing into low clouds.'] }],
-  [4, { srcs: ['/images/photo-04.jpg', '/images/restored-photo-04.jpg', '/images/restored-photo-04-v2.jpg'], captions: ['White Rhythm', 'Through the Rain'], descriptions: ['Soft vertical folds move from shadow into light, transforming a simple white curtain into a quiet study of repetition, texture, and brightness.', 'Traffic signals and red brake lights blur behind a rain-covered windshield, turning an ordinary drive into a layered study of water, color, and motion.', 'Raindrops on a windshield scatter traffic lights into soft shapes and reduce contrast on the road ahead. Wet pavement also increases stopping distance, making slower speeds, greater following distance, and clear visibility especially important during a rainy drive.', 'Rain covers the windshield and breaks the road ahead into soft amber and red shapes. The wiper edge cuts across the glass while blurred traffic and wet pavement make the car’s slow, enclosed nighttime ride feel private and cinematic.', 'A night drive unfolds behind rain-streaked glass, with brake lights, streetlamps, and wet pavement dissolving into red and amber reflections. From the quiet passenger seat to the open road ahead, the city feels distant, enclosed, and slow.'] }],
+  [4, { srcs: ['/images/photo-04.jpg', '/images/restored-photo-04.jpg', '/images/restored-photo-04-v2.jpg'], captions: ['White Rhythm', 'Through the Rain', 'Rainy Car Rides', 'Rainlit Drive'], descriptions: ['Soft vertical folds move from shadow into light, transforming a simple white curtain into a quiet study of repetition, texture, and brightness.', 'Traffic signals and red brake lights blur behind a rain-covered windshield, turning an ordinary drive into a layered study of water, color, and motion.', 'Raindrops on a windshield scatter traffic lights into soft shapes and reduce contrast on the road ahead. Wet pavement also increases stopping distance, making slower speeds, greater following distance, and clear visibility especially important during a rainy drive.', 'Rain covers the windshield and breaks the road ahead into soft amber and red shapes. The wiper edge cuts across the glass while blurred traffic and wet pavement make the car’s slow, enclosed nighttime ride feel private and cinematic.', 'A night drive unfolds behind rain-streaked glass, with brake lights, streetlamps, and wet pavement dissolving into red and amber reflections. From the quiet passenger seat to the open road ahead, the city feels distant, enclosed, and slow.', 'Rain and city lights blur together during a quiet night drive.'] }],
   [5, { srcs: ['/images/photo-05.jpg', '/images/restored-photo-05.jpg', '/images/restored-photo-05-v2.jpg'], captions: ['Under the bridge', 'Beneath the Manhattan Bridge'], descriptions: ['Shadows cast long and deep, hiding secrets beneath concrete and steel.', 'The steel span of the Manhattan Bridge crosses overhead while the distant skyline appears beyond its columns in warm late-day light.'] }],
   [6, { srcs: ['/images/photo-06.jpg', '/images/restored-photo-06.jpg', '/images/restored-photo-06-v2.jpg', '/images/photo-06-night-walk-pexels.jpg'], captions: ['Open to sky', 'Open Octagon'], descriptions: ['A rare clearing where the clouds gather, uninterrupted by the city below.', 'Dark structural beams form a precise octagonal frame around a bright opening, drawing the eye upward toward a clear and nearly featureless sky.', 'Two silhouettes walk down a wet wooden path toward a lively city intersection at night. Streetlights, headlights, and glowing windows gather around the dark figures, turning an ordinary walk into a quiet view of the city after sunset.'] }],
   [7, { srcs: ['/images/photo-07.jpg'], captions: ['Lantern hour'], descriptions: ['Dusk settling in, warm glow illuminating the evening as the day winds down.'] }],
@@ -51,7 +51,7 @@ export function normalizeAlbum(album: StoredAlbum, upgradePhotoCopy = false): Al
       const shouldUpgradeCopy =
         upgradePhotoCopy &&
         Boolean(starter) &&
-        (photo.id === 5 || (Boolean(legacy) && legacy?.srcs.includes(photo.src) === true));
+        (photo.id === 5 || (Boolean(legacy) && legacy?.srcs.some((src) => sourceMatchesLegacy(photo.src, src)) === true));
 
       return {
         ...photo,
@@ -72,6 +72,10 @@ export function normalizeAlbum(album: StoredAlbum, upgradePhotoCopy = false): Al
 }
 
 type AlbumStorage = Pick<Storage, 'getItem'> & Partial<Pick<Storage, 'setItem'>>;
+
+function sourceMatchesLegacy(source: string, legacySource: string): boolean {
+  return source === legacySource || source.split('?')[0].endsWith(legacySource);
+}
 
 export function readAlbum(storage: AlbumStorage | undefined = typeof window === 'undefined' ? undefined : window.localStorage): Album {
   if (!storage) return starterAlbum;
@@ -123,7 +127,7 @@ function isKnownLegacyPhotoValue(localPhoto: Photo, serverPhoto: Photo): boolean
   if (!legacy || localPhoto.id !== serverPhoto.id) return false;
 
   return (
-    (localPhoto.src === serverPhoto.src || legacy.srcs.includes(localPhoto.src)) &&
+    (localPhoto.src === serverPhoto.src || legacy.srcs.some((src) => sourceMatchesLegacy(localPhoto.src, src))) &&
     (localPhoto.caption === serverPhoto.caption || legacy.captions.includes(localPhoto.caption)) &&
     (localPhoto.description === serverPhoto.description || legacy.descriptions.includes(localPhoto.description))
   );
@@ -148,10 +152,10 @@ export function reconcileAlbumAfterServerLoad(
   localAlbum: Album,
   serverAlbum: Album,
   wasMarkedUnsynced: boolean,
-  hasStoredLocalAlbum = false,
+  _hasStoredLocalAlbum = false,
 ): { album: Album; hasUnsyncedLocalChanges: boolean } {
   const hasUnsyncedLocalChanges =
-    (wasMarkedUnsynced || hasStoredLocalAlbum) &&
+    wasMarkedUnsynced &&
     !albumsEqual(localAlbum, serverAlbum) &&
     !localAlbumOnlyContainsKnownLegacyCopy(localAlbum, serverAlbum);
   return {

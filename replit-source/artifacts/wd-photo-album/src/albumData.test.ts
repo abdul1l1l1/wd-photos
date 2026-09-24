@@ -89,7 +89,7 @@ test('a stale dirty marker is cleared when local and server data already match',
   assert.equal(reconciled.album, starterAlbum);
 });
 
-test('an existing locally stored album is never replaced by late server hydration', () => {
+test('an unmarked locally stored album yields to late server hydration', () => {
   const localAlbum = {
     ...starterAlbum,
     title: 'My saved album',
@@ -109,8 +109,8 @@ test('an existing locally stored album is never replaced by late server hydratio
     true,
   );
 
-  assert.equal(reconciled.hasUnsyncedLocalChanges, true);
-  assert.equal(reconciled.album, localAlbum);
+  assert.equal(reconciled.hasUnsyncedLocalChanges, false);
+  assert.equal(reconciled.album, serverAlbum);
 });
 
 test('a stale locally stored starter copy is replaced by the newer server copy', () => {
@@ -136,6 +136,101 @@ test('a stale locally stored starter copy is replaced by the newer server copy',
 
   assert.equal(reconciled.hasUnsyncedLocalChanges, false);
   assert.equal(reconciled.album, starterAlbum);
+});
+
+test('a cached legacy description with the current caption is migrated', () => {
+  const staleLocalAlbum = {
+    ...starterAlbum,
+    photos: starterAlbum.photos.map((photo) =>
+      photo.id === 1
+        ? {
+            ...photo,
+            description:
+              'A tree-lined path shows the seasonal color change of deciduous foliage. As chlorophyll breaks down in cooler weather, yellow and orange pigments become more visible.',
+          }
+        : photo,
+    ),
+  };
+  const storageValues = new Map<string, string>([
+    [STORAGE_KEY, JSON.stringify(staleLocalAlbum)],
+    ['wd-photo-album-copy-version', '16'],
+  ]);
+  const storage = {
+    getItem: (key: string) => storageValues.get(key) ?? null,
+    setItem: (key: string, value: string) => storageValues.set(key, value),
+  };
+
+  const migrated = readAlbum(storage);
+
+  assert.equal(
+    migrated.photos.find((photo) => photo.id === 1)?.description,
+    starterAlbum.photos.find((photo) => photo.id === 1)?.description,
+  );
+  assert.equal(storageValues.get('wd-photo-album-copy-version'), '19');
+});
+
+test('a cached legacy GitHub image URL is migrated to the synced asset', () => {
+  const staleLocalAlbum = {
+    ...starterAlbum,
+    photos: starterAlbum.photos.map((photo) =>
+      photo.id === 1
+        ? {
+            ...photo,
+            src: 'https://raw.githubusercontent.com/abdul1l1l1/wd-photos/main/images/photo-01.jpg?v=old',
+            description:
+              'A tree-lined path shows the seasonal color change of deciduous foliage. As chlorophyll breaks down in cooler weather, yellow and orange pigments become more visible.',
+          }
+        : photo,
+    ),
+  };
+  const storageValues = new Map<string, string>([
+    [STORAGE_KEY, JSON.stringify(staleLocalAlbum)],
+    ['wd-photo-album-copy-version', '17'],
+  ]);
+  const storage = {
+    getItem: (key: string) => storageValues.get(key) ?? null,
+    setItem: (key: string, value: string) => storageValues.set(key, value),
+  };
+
+  const migrated = readAlbum(storage);
+  const firstPhoto = migrated.photos.find((photo) => photo.id === 1);
+
+  assert.equal(firstPhoto?.src, starterAlbum.photos.find((photo) => photo.id === 1)?.src);
+  assert.equal(firstPhoto?.description, starterAlbum.photos.find((photo) => photo.id === 1)?.description);
+  assert.equal(storageValues.get('wd-photo-album-copy-version'), '19');
+});
+
+test('a cached Photo 4 starter caption and description migrate to the updated copy', () => {
+  const staleLocalAlbum = {
+    ...starterAlbum,
+    photos: starterAlbum.photos.map((photo) =>
+      photo.id === 4
+        ? {
+            ...photo,
+            caption: 'Rainlit Drive',
+            description: 'Rain and city lights blur together during a quiet night drive.',
+          }
+        : photo,
+    ),
+  };
+  const storageValues = new Map<string, string>([
+    [STORAGE_KEY, JSON.stringify(staleLocalAlbum)],
+    ['wd-photo-album-copy-version', '18'],
+  ]);
+  const storage = {
+    getItem: (key: string) => storageValues.get(key) ?? null,
+    setItem: (key: string, value: string) => storageValues.set(key, value),
+  };
+
+  const migrated = readAlbum(storage);
+  const fourthPhoto = migrated.photos.find((photo) => photo.id === 4);
+
+  assert.equal(fourthPhoto?.caption, 'Late Night Rides');
+  assert.equal(
+    fourthPhoto?.description,
+    'Riding late at night around the city or country area with friends playing music',
+  );
+  assert.equal(storageValues.get('wd-photo-album-copy-version'), '19');
 });
 
 test('the supplied fifth photo replaces any cached fifth-photo variant', () => {

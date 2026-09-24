@@ -47,7 +47,7 @@ const starterAlbum: AlbumDocument = {
     { id: 1, src: "/images/restored-photo-01-v2.jpg", caption: "Autumn", description: "A quiet path winds through trees covered in autumn leaves." },
     { id: 2, src: "/images/restored-photo-02-v2.jpg", caption: "Listening to Music", description: "Headphones, earbuds, and portable players sit together on a dark tabletop." },
     { id: 3, src: "/images/restored-photo-03-v2.jpg", caption: "Downtown San Diego", description: "Downtown San Diego lights up beneath a dark, cloudy sky." },
-    { id: 4, src: "/images/restored-photo-04-v2.jpg", caption: "Rainlit Drive", description: "Rain and city lights blur together during a quiet night drive." },
+    { id: 4, src: "/images/restored-photo-04-v2.jpg", caption: "Late Night Rides", description: "Riding late at night around the city or country area with friends playing music" },
     { id: 5, src: "/images/photo-05-v3.jpg", caption: "I AM MUSIC", description: "I AM MUSIC BY PLAYBOI CARTI" },
     { id: 6, src: "/images/photo-06-night-walk-pexels.jpg", caption: "Night Walk", description: "Two people walk toward the city on a rainy night." },
     { id: 7, src: "/images/photo-07.jpg", caption: "Lantern hour", description: "A lantern glows as the evening begins." },

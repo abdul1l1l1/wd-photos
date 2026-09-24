@@ -22,8 +22,8 @@
     {
       "id": 4,
       "src": "/images/restored-photo-04-v2.jpg",
-      "caption": "Rainlit Drive",
-      "description": "Rain and city lights blur together during a quiet night drive."
+      "caption": "Late Night Rides",
+      "description": "Riding late at night around the city or country area with friends playing music"
     },
     {
       "id": 5,
@@ -56,5 +56,5 @@
       "description": "Calm water meets the edge of the land."
     }
   ],
-  "lastSyncedAt": null
+  "lastSyncedAt": "2026-09-24T17:43:01.639Z"
 }
