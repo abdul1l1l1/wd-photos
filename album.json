@@ -5,7 +5,7 @@
       "id": 1,
       "src": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRp28dLlaC0301ijoAXtehqgrUxHVB1acpMzshP5bKNOg&s=10",
       "caption": "Autumn",
-      "description": "A quiet fall day."
+      "description": "A tree-lined path shows the seasonal color change of deciduous foliage. As chlorophyll breaks down in cooler weather, yellow and orange pigments become more visible before the leaves fall and return nutrients to the forest floor."
     },
     {
       "id": 2,
@@ -40,21 +40,21 @@
     {
       "id": 7,
       "src": "/images/photo-07.jpg",
-      "caption": "Fashion",
-      "description": "Taking it slow."
+      "caption": "Lantern hour",
+      "description": "A glowing lantern hangs against deepening blue, marking the quiet transition from daylight into evening."
     },
     {
       "id": 8,
       "src": "/images/photo-08.jpg",
       "caption": "Hard light",
-      "description": "A calm moment in the day."
+      "description": "Sharp sunlight divides the scene into bold planes, revealing texture through strong contrast and shadow."
     },
     {
       "id": 9,
       "src": "/images/photo-09.jpg",
       "caption": "Edge of water",
-      "description": "A little time to relax."
+      "description": "Water meets the built edge in a calm horizon, with muted tones that hold the scene in stillness."
     }
   ],
-  "lastSyncedAt": "2026-09-25T18:26:50.186Z"
+  "lastSyncedAt": "2026-09-25T18:29:24.426Z"
 }
