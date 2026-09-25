@@ -166,7 +166,7 @@ test('a cached legacy description with the current caption is migrated', () => {
     migrated.photos.find((photo) => photo.id === 1)?.description,
     starterAlbum.photos.find((photo) => photo.id === 1)?.description,
   );
-  assert.equal(storageValues.get('wd-photo-album-copy-version'), '22');
+  assert.equal(storageValues.get('wd-photo-album-copy-version'), '23');
 });
 
 test('a cached legacy GitHub image URL is migrated to the synced asset', () => {
@@ -197,7 +197,7 @@ test('a cached legacy GitHub image URL is migrated to the synced asset', () => {
 
   assert.equal(firstPhoto?.src, starterAlbum.photos.find((photo) => photo.id === 1)?.src);
   assert.equal(firstPhoto?.description, starterAlbum.photos.find((photo) => photo.id === 1)?.description);
-  assert.equal(storageValues.get('wd-photo-album-copy-version'), '22');
+  assert.equal(storageValues.get('wd-photo-album-copy-version'), '23');
 });
 
 test('a cached Photo 4 starter caption and description migrate to the updated copy', () => {
@@ -228,21 +228,21 @@ test('a cached Photo 4 starter caption and description migrate to the updated co
   assert.equal(fourthPhoto?.caption, 'Late Night Rides');
   assert.equal(
     fourthPhoto?.description,
-    'Late rides with friends just hit different.',
+    'Driving around with friends.',
   );
-  assert.equal(storageValues.get('wd-photo-album-copy-version'), '22');
+  assert.equal(storageValues.get('wd-photo-album-copy-version'), '23');
 });
 
-test('current starter descriptions migrate to the vibe copy except for photo 5', () => {
+test('version 22 starter descriptions migrate to the latest copy except for photo 5', () => {
   const previousDescriptions = new Map<number, string>([
-    [1, 'Parked cars line a quiet street under autumn trees.'],
-    [2, 'Headphones, earbuds, and portable players sit together on a dark tabletop.'],
-    [3, 'Downtown San Diego lights up beneath a dark, cloudy sky.'],
-    [4, 'Riding late at night around the city or country area with friends playing music'],
-    [6, 'Two people walk toward the city on a rainy night.'],
-    [7, 'A lantern glows as the evening begins.'],
-    [8, 'Bright sunlight cuts across the scene.'],
-    [9, 'Calm water meets the edge of the land.'],
+    [1, 'Fall days like this just feel peaceful.'],
+    [2, 'Just me and the music for a while.'],
+    [3, 'The city feels different after dark.'],
+    [4, 'Late rides with friends just hit different.'],
+    [6, 'A late walk helps me clear my head.'],
+    [7, 'Slow nights like this are my favorite.'],
+    [8, 'Just taking a minute to enjoy the day.'],
+    [9, 'Nothing but peace out here.'],
   ]);
   const savedAlbum = {
     ...starterAlbum,
@@ -253,7 +253,7 @@ test('current starter descriptions migrate to the vibe copy except for photo 5',
   };
   const storageValues = new Map<string, string>([
     [STORAGE_KEY, JSON.stringify(savedAlbum)],
-    ['wd-photo-album-copy-version', '21'],
+    ['wd-photo-album-copy-version', '22'],
   ]);
   const storage = {
     getItem: (key: string) => storageValues.get(key) ?? null,
@@ -271,7 +271,7 @@ test('current starter descriptions migrate to the vibe copy except for photo 5',
     migrated.photos.find((photo) => photo.id === 5)?.description,
     'I AM MUSIC BY PLAYBOI CARTI',
   );
-  assert.equal(storageValues.get('wd-photo-album-copy-version'), '22');
+  assert.equal(storageValues.get('wd-photo-album-copy-version'), '23');
 });
 
 test('a cached Autumn description updates without replacing its image', () => {
@@ -302,8 +302,8 @@ test('a cached Autumn description updates without replacing its image', () => {
 
   assert.equal(autumnPhoto?.src, externalImage);
   assert.equal(autumnPhoto?.caption, 'Autumn');
-  assert.equal(autumnPhoto?.description, 'Fall days like this just feel peaceful.');
-  assert.equal(storageValues.get('wd-photo-album-copy-version'), '22');
+  assert.equal(autumnPhoto?.description, 'A quiet fall day.');
+  assert.equal(storageValues.get('wd-photo-album-copy-version'), '23');
 });
 
 test('the previous Autumn thumbnail migrates to the latest saved image', () => {
@@ -334,7 +334,7 @@ test('the previous Autumn thumbnail migrates to the latest saved image', () => {
   const autumnPhoto = migrated.photos.find((photo) => photo.id === 1);
 
   assert.equal(autumnPhoto?.src, starterAlbum.photos.find((photo) => photo.id === 1)?.src);
-  assert.equal(autumnPhoto?.description, 'Fall days like this just feel peaceful.');
+  assert.equal(autumnPhoto?.description, 'A quiet fall day.');
 });
 
 test('legacy copy migrates without replacing a newer external image', () => {
@@ -391,7 +391,7 @@ test('legacy copy migrates without replacing a newer external image', () => {
     assert.equal(migratedPhoto?.caption, starter?.caption);
     assert.equal(migratedPhoto?.description, starter?.description);
   }
-  assert.equal(storageValues.get('wd-photo-album-copy-version'), '22');
+  assert.equal(storageValues.get('wd-photo-album-copy-version'), '23');
 });
 
 test('the supplied fifth photo replaces any cached fifth-photo variant', () => {

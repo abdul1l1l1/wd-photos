@@ -5,25 +5,25 @@
       "id": 1,
       "src": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRp28dLlaC0301ijoAXtehqgrUxHVB1acpMzshP5bKNOg&s=10",
       "caption": "Autumn",
-      "description": "Fall days like this just feel peaceful."
+      "description": "A quiet fall day."
     },
     {
       "id": 2,
       "src": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSZ1xsi8usawr0jU8aJ1TyqUSlY_BMpeVKYIsQkBzoaag&s=10",
       "caption": "Listening to Music",
-      "description": "Just me and the music for a while."
+      "description": "Time to unwind."
     },
     {
       "id": 3,
       "src": "/images/restored-photo-03-v2.jpg",
       "caption": "Downtown San Diego",
-      "description": "The city feels different after dark."
+      "description": "The city feels quieter at night."
     },
     {
       "id": 4,
       "src": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQB9lRiXh4ut2QMhXFltcZqCF4Ao3Gnj_sJG9iRYS1fNw&s=10",
       "caption": "Late Night Rides",
-      "description": "Late rides with friends just hit different."
+      "description": "Driving around with friends."
     },
     {
       "id": 5,
@@ -35,26 +35,26 @@
       "id": 6,
       "src": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT3-X2dAXxFx6IwPXnervcG88j3oP117WllaMEmj9d8sg&s=10",
       "caption": "Night Walk",
-      "description": "A late walk helps me clear my head."
+      "description": "A quiet walk at night."
     },
     {
       "id": 7,
       "src": "/images/photo-07.jpg",
       "caption": "Fashion",
-      "description": "Slow nights like this are my favorite."
+      "description": "Taking it slow."
     },
     {
       "id": 8,
       "src": "/images/photo-08.jpg",
       "caption": "Hard light",
-      "description": "Just taking a minute to enjoy the day."
+      "description": "A calm moment in the day."
     },
     {
       "id": 9,
       "src": "/images/photo-09.jpg",
       "caption": "Edge of water",
-      "description": "Nothing but peace out here."
+      "description": "A little time to relax."
     }
   ],
-  "lastSyncedAt": "2026-09-25T18:16:10.437Z"
+  "lastSyncedAt": "2026-09-25T18:26:50.186Z"
 }
