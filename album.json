@@ -5,7 +5,7 @@
       "id": 1,
       "src": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRp28dLlaC0301ijoAXtehqgrUxHVB1acpMzshP5bKNOg&s=10",
       "caption": "Autumn",
-      "description": "a quiet day during fall"
+      "description": "A quiet fall day."
     },
     {
       "id": 2,
@@ -40,21 +40,21 @@
     {
       "id": 7,
       "src": "/images/photo-07.jpg",
-      "caption": "Lantern hour",
-      "description": "A glowing lantern hangs against deepening blue, marking the quiet transition from daylight into evening."
+      "caption": "Fashion",
+      "description": "Taking it slow."
     },
     {
       "id": 8,
       "src": "/images/photo-08.jpg",
       "caption": "Hard light",
-      "description": "Sharp sunlight divides the scene into bold planes, revealing texture through strong contrast and shadow."
+      "description": "A calm moment in the day."
     },
     {
       "id": 9,
       "src": "/images/photo-09.jpg",
       "caption": "Edge of water",
-      "description": "Water meets the built edge in a calm horizon, with muted tones that hold the scene in stillness."
+      "description": "A little time to relax."
     }
   ],
-  "lastSyncedAt": "2026-09-25T18:29:32.426Z"
+  "lastSyncedAt": "2026-09-25T18:29:40.582Z"
 }
