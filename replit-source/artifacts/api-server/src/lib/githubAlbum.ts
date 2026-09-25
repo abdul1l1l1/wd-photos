@@ -44,15 +44,15 @@ type GitTree = {
 const starterAlbum: AlbumDocument = {
   title: "WD Photo",
   photos: [
-    { id: 1, src: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRp28dLlaC0301ijoAXtehqgrUxHVB1acpMzshP5bKNOg&s=10", caption: "Autumn", description: "Parked cars line a quiet street under autumn trees." },
-    { id: 2, src: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSZ1xsi8usawr0jU8aJ1TyqUSlY_BMpeVKYIsQkBzoaag&s=10", caption: "Listening to Music", description: "Headphones, earbuds, and portable players sit together on a dark tabletop." },
-    { id: 3, src: "/images/restored-photo-03-v2.jpg", caption: "Downtown San Diego", description: "Downtown San Diego lights up beneath a dark, cloudy sky." },
-    { id: 4, src: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQB9lRiXh4ut2QMhXFltcZqCF4Ao3Gnj_sJG9iRYS1fNw&s=10", caption: "Late Night Rides", description: "Riding late at night around the city or country area with friends playing music" },
+    { id: 1, src: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRp28dLlaC0301ijoAXtehqgrUxHVB1acpMzshP5bKNOg&s=10", caption: "Autumn", description: "Fall days like this just feel peaceful." },
+    { id: 2, src: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSZ1xsi8usawr0jU8aJ1TyqUSlY_BMpeVKYIsQkBzoaag&s=10", caption: "Listening to Music", description: "Just me and the music for a while." },
+    { id: 3, src: "/images/restored-photo-03-v2.jpg", caption: "Downtown San Diego", description: "The city feels different after dark." },
+    { id: 4, src: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQB9lRiXh4ut2QMhXFltcZqCF4Ao3Gnj_sJG9iRYS1fNw&s=10", caption: "Late Night Rides", description: "Late rides with friends just hit different." },
     { id: 5, src: "/images/photo-05-v3.jpg", caption: "I AM MUSIC", description: "I AM MUSIC BY PLAYBOI CARTI" },
-    { id: 6, src: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT3-X2dAXxFx6IwPXnervcG88j3oP117WllaMEmj9d8sg&s=10", caption: "Night Walk", description: "Two people walk toward the city on a rainy night." },
-    { id: 7, src: "/images/photo-07.jpg", caption: "Lantern hour", description: "A lantern glows as the evening begins." },
-    { id: 8, src: "/images/photo-08.jpg", caption: "Hard light", description: "Bright sunlight cuts across the scene." },
-    { id: 9, src: "/images/photo-09.jpg", caption: "Edge of water", description: "Calm water meets the edge of the land." },
+    { id: 6, src: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT3-X2dAXxFx6IwPXnervcG88j3oP117WllaMEmj9d8sg&s=10", caption: "Night Walk", description: "A late walk helps me clear my head." },
+    { id: 7, src: "/images/photo-07.jpg", caption: "Lantern hour", description: "Slow nights like this are my favorite." },
+    { id: 8, src: "/images/photo-08.jpg", caption: "Hard light", description: "Just taking a minute to enjoy the day." },
+    { id: 9, src: "/images/photo-09.jpg", caption: "Edge of water", description: "Nothing but peace out here." },
   ],
   lastSyncedAt: null,
 };

@@ -84,7 +84,6 @@ function Home() {
   const [editingPhoto, setEditingPhoto] = useState<Photo | null>(null);
   const [toast, setToast] = useState('');
   const [syncStatus, setSyncStatus] = useState('');
-  const [hoveredPhotoId, setHoveredPhotoId] = useState<number | null>(null);
 
   const initializedForId = useRef<string | null>(null);
   const hadStoredLocalAlbum = useRef(window.localStorage.getItem(STORAGE_KEY) !== null);
@@ -279,22 +278,11 @@ function Home() {
                 onKeyDown={(event) => {
                   if (event.key === 'Enter' || event.key === ' ') setLocation(`/photo/${photo.id}`);
                 }}
-                onMouseEnter={() => setHoveredPhotoId(photo.id)}
-                onMouseLeave={() => setHoveredPhotoId(null)}
-                onFocus={() => setHoveredPhotoId(photo.id)}
-                onBlur={(event) => {
-                  if (!event.currentTarget.contains(event.relatedTarget as Node | null)) {
-                    setHoveredPhotoId(null);
-                  }
-                }}
                 aria-label={`View ${photo.caption}`}
                 data-testid={`button-view-photo-${photo.id}`}
               >
                 <img src={photo.src} alt={photo.caption} referrerPolicy="no-referrer" data-testid={`img-photo-${photo.id}`} />
-                <div
-                  className="photo-hover"
-                  style={{ opacity: hoveredPhotoId === photo.id ? 1 : 0 }}
-                >
+                <div className="photo-hover">
                   <div className="photo-hover-copy">
                     <h2 className="photo-hover-title">{photo.caption}</h2>
                     <p className="photo-hover-description" data-testid={`text-photo-preview-${photo.id}`}>
