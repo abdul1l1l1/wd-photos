@@ -233,27 +233,6 @@ export function HomePage() {
         </div>
       </section>
 
-      <section className="overview-section" aria-labelledby="overview-title">
-        <div className="overview-heading">
-          <div><p className="portfolio-eyebrow">At a glance</p><h2 id="overview-title">Quick overview</h2></div>
-          <span className="overview-mark">AA / 2028</span>
-        </div>
-        <div className="overview-grid">
-          {[
-            ['Birthday', 'Feb 12'],
-            ['High school', "Grossmont ('28)"],
-            ['Trade focus', 'HVAC & trades'],
-            ['Location', 'El Cajon, CA'],
-          ].map(([label, value], index) => (
-            <article className="overview-item" key={label} data-testid={`card-overview-${index + 1}`}>
-              <span className="overview-number">0{index + 1}</span>
-              <span className="overview-label">{label}</span>
-              <strong>{value}</strong>
-            </article>
-          ))}
-        </div>
-      </section>
-
       <ContactSection />
     </PortfolioShell>
   );
