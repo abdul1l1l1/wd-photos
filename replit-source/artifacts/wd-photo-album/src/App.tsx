@@ -6,6 +6,7 @@ import { TooltipProvider } from '@/components/ui/tooltip';
 import { ImagePlus, Pencil, Upload, X, ArrowLeft } from 'lucide-react';
 import { Route, Switch, useLocation, useParams, Router as WouterRouter, Link } from 'wouter';
 import NotFound from '@/pages/not-found';
+import { HomePage, FuturePage, InterestsPage, GoalsPage, PortfolioHeader } from '@/pages/PortfolioPages';
 
 import { useGetAlbum, useSyncAlbum, getGetAlbumQueryKey } from '@workspace/api-client-react';
 import { ClerkProvider, SignIn, SignUp, useUser, useClerk, ClerkLoaded } from '@clerk/react';
@@ -71,7 +72,7 @@ const relatedPhotosById: Record<number, RelatedPhoto[]> = {
     { src: '/images/context-09-03-v2.jpg', title: 'Where water meets land' },
   ],
 };
-function Home() {
+function MediaAlbum() {
   const { isSignedIn } = useUser();
   const { signOut } = useClerk();
   const { data: serverAlbum } = useGetAlbum();
@@ -209,6 +210,8 @@ function Home() {
   const effectiveIsEditing = isEditing;
 
   return (
+    <>
+    <PortfolioHeader active="media" />
     <main className="album-shell">
       <header className="page-wrap masthead">
         <div className="masthead-top">
@@ -233,7 +236,7 @@ function Home() {
             {!isSignedIn ? (
               <Link href="/sign-in" className="outline-btn" data-testid="link-sign-in">Owner sign in</Link>
             ) : (
-              <button type="button" className="outline-btn" onClick={() => signOut({ redirectUrl: basePath || "/" })} data-testid="button-sign-out">
+              <button type="button" className="outline-btn" onClick={() => signOut({ redirectUrl: `${basePath}/media` })} data-testid="button-sign-out">
                 Sign out
               </button>
             )}
@@ -327,6 +330,7 @@ function Home() {
 
       {toast && <div className="toast-note" role="status" data-testid="status-toast">{toast}</div>}
     </main>
+    </>
   );
 }
 
@@ -527,7 +531,7 @@ function PhotoDetail() {
       <main className="album-shell flex items-center justify-center">
         <div className="page-wrap text-center" style={{ paddingTop: '100px' }}>
           <h2>Photo not found</h2>
-          <button className="outline-btn mt-8" onClick={() => setLocation('/')}>Return to album</button>
+          <button className="outline-btn mt-8" onClick={() => setLocation('/media')}>Return to album</button>
         </div>
       </main>
     );
@@ -539,7 +543,7 @@ function PhotoDetail() {
     <main className="album-shell" key={photo.id}>
       <header className="page-wrap masthead" style={{ paddingBottom: '30px' }}>
         <div className="masthead-top">
-          <Link href="/" className="brand-lockup" data-testid="link-back-album">
+          <Link href="/media" className="brand-lockup" data-testid="link-back-album">
             <ArrowLeft size={16} style={{ marginRight: '8px' }} aria-hidden="true" />
             <span className="brand-name">Back to album</span>
           </Link>
@@ -727,7 +731,11 @@ function ClerkProviderWithRoutes() {
         <TooltipProvider>
           <RoutedErrorBoundary>
             <Switch>
-              <Route path="/" component={Home} />
+              <Route path="/" component={HomePage} />
+              <Route path="/media" component={MediaAlbum} />
+              <Route path="/future" component={FuturePage} />
+              <Route path="/interests" component={InterestsPage} />
+              <Route path="/goals" component={GoalsPage} />
               <Route path="/photo/:id" component={PhotoDetail} />
               <Route path="/sign-in/*?" component={SignInPage} />
               <Route path="/sign-up/*?" component={SignUpPage} />
