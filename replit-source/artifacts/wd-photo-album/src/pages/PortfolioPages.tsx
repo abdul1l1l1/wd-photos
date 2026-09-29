@@ -1,4 +1,4 @@
-import { useEffect, useState, type FormEvent, type ReactNode } from 'react';
+import { useEffect, useState, type CSSProperties, type FormEvent, type ReactNode } from 'react';
 import { Link } from 'wouter';
 import {
   ArrowDownRight,
@@ -97,10 +97,64 @@ function PortfolioShell({
 
 function SectionHeading({ eyebrow, title, description }: { eyebrow: string; title: string; description: string }) {
   return (
-    <div className="portfolio-section-heading">
+    <header className="archive-masthead page-masthead">
       <p className="portfolio-eyebrow">{eyebrow}</p>
       <h1>{title}</h1>
-      <p className="portfolio-lede">{description}</p>
+      <p className="archive-subtitle">{description}</p>
+    </header>
+  );
+}
+
+function ArchiveTile({
+  title,
+  label,
+  description,
+  index,
+  image,
+  alt,
+  className = '',
+  visual,
+  testId,
+  imageTestId,
+}: {
+  title: string;
+  label: string;
+  description?: string;
+  index: number;
+  image?: string;
+  alt?: string;
+  className?: string;
+  visual?: ReactNode;
+  testId?: string;
+  imageTestId?: string;
+}) {
+  return (
+    <article
+      className={`archive-tile portfolio-card ${className}`}
+      style={{ '--tile-index': index } as CSSProperties}
+      data-testid={testId ?? `card-archive-${index + 1}`}
+    >
+      <div className="tile-visual">
+        {image ? <img src={image} alt={alt ?? ''} referrerPolicy="no-referrer" data-testid={imageTestId} /> : visual}
+        <div className="tile-caption">
+          <div className="tile-caption-copy">
+            <small>{label}</small>
+            <h2>{title}</h2>
+            {description && <p>{description}</p>}
+          </div>
+          <span className="tile-index">{String(index + 1).padStart(2, '0')}</span>
+        </div>
+      </div>
+    </article>
+  );
+}
+
+function TypeTileVisual({ top, glyph, bottom }: { top: string; glyph: string; bottom: string }) {
+  return (
+    <div className="tile-text-visual" aria-hidden="true">
+      <div className="tile-text-top"><span>WD / FIELD NOTES</span><span>{top}</span></div>
+      <span className="tile-glyph">{glyph}</span>
+      <span className="tile-text-label">{bottom}</span>
     </div>
   );
 }
@@ -121,7 +175,7 @@ function ContactSection() {
   };
 
   return (
-    <section className="portfolio-contact portfolio-card" id="contact-section" aria-labelledby="contact-title">
+    <section className="contact-section" id="contact-section" aria-labelledby="contact-title">
       <div className="contact-copy">
         <p className="portfolio-eyebrow">Open line</p>
         <h2 id="contact-title">Get in touch</h2>
@@ -198,39 +252,53 @@ function ContactSection() {
 export function HomePage() {
   return (
     <PortfolioShell active="home">
-      <section className="home-hero portfolio-card" aria-labelledby="home-title">
-        <div className="home-hero-copy">
-          <p className="portfolio-eyebrow">Student <span aria-hidden="true">·</span> Trades</p>
-          <span className="portfolio-chip">Grossmont High School <span aria-hidden="true">/</span> Class of 2028</span>
-          <h1 id="home-title">Abdul<br /><span>Alawad.</span></h1>
-          <p className="home-summary">High school student in El Cajon, California focusing on building construction, automotive mechanics, and trade skills.</p>
-          <div className="home-actions">
-            <Link href="/media" className="portfolio-button portfolio-button-light" data-testid="link-view-media">
-              View media portfolio <ArrowUpRight size={15} aria-hidden="true" />
-            </Link>
-            <Link href="/interests" className="portfolio-button portfolio-button-quiet" data-testid="link-explore-interests">
-              Explore interests
-            </Link>
-          </div>
+      <header className="archive-masthead home-masthead">
+        <p className="portfolio-eyebrow">WD / Personal archive / 01</p>
+        <h1 id="home-title">Abdul <span>Alawad</span></h1>
+        <p className="archive-subtitle">A student-and-trades archive from El Cajon, California. School, practical work, and what comes next.</p>
+      </header>
+      <div className="archive-meta home-meta">
+        <span>Selected pages / <strong>Profile &amp; practice</strong></span>
+        <div className="archive-quicklinks">
+          <Link href="/media" data-testid="link-view-media">View media portfolio <ArrowUpRight size={13} aria-hidden="true" /></Link>
+          <Link href="/interests" data-testid="link-explore-interests">Explore interests <ArrowUpRight size={13} aria-hidden="true" /></Link>
         </div>
-        <figure className="profile-photo">
-          <img src="https://i.imgur.com/OzBr4cB.jpeg" alt="Abdul Alawad" referrerPolicy="no-referrer" data-testid="img-profile" />
-          <figcaption><span>El Cajon, California</span><span>Student / Trades</span></figcaption>
-        </figure>
-        <span className="hero-index" aria-hidden="true">01 — PROFILE</span>
-      </section>
-
-      <section className="bio-section" aria-labelledby="about-title">
-        <div className="section-side-label"><span>01</span><span>About</span></div>
-        <div className="bio-content">
-          <p className="portfolio-eyebrow">A little background</p>
-          <h2 id="about-title">Learning by<br />making things.</h2>
-          <div className="bio-paragraphs">
-            <p>My name is Abdul Alawad, and I am a high school student attending Grossmont High School in El Cajon, California, preparing for graduation with the Class of 2028.</p>
-            <p>I am interested in practical trade work including structural building, HVAC system mechanics, automotive tuning, and hands-on carpentry projects.</p>
-            <p>My main focus is learning valuable trade skills, launching a successful local business, and working hard to build a strong foundation for financial independence.</p>
-          </div>
-        </div>
+      </div>
+      <section className="archive-grid home-grid" aria-label="Profile archive">
+        <ArchiveTile
+          index={0}
+          className="tile-portrait"
+          label="Profile / El Cajon, CA"
+          title="Abdul Alawad"
+          description="Student / Trades"
+          image="https://i.imgur.com/OzBr4cB.jpeg"
+          alt="Abdul Alawad"
+          imageTestId="img-profile"
+        />
+        <ArchiveTile
+          index={1}
+          className="tile-wide"
+          label="Study / Current focus"
+          title="Building a practical foundation."
+          description="High school student focusing on building construction, automotive mechanics, and trade skills."
+          visual={<TypeTileVisual top="Grossmont / 2028" glyph="01" bottom="Learning by making things / student to skilled trades" />}
+        />
+        <ArchiveTile
+          index={2}
+          className="tile-profile-note"
+          label="Practice / Areas of interest"
+          title="Hands-on work"
+          description="Structural building, HVAC system mechanics, automotive tuning, and carpentry projects."
+          visual={<TypeTileVisual top="Trade studies" glyph="HVAC" bottom="Tools, systems, and the details that make a job work." />}
+        />
+        <ArchiveTile
+          index={3}
+          className="tile-profile-note"
+          label="Direction / Long view"
+          title="Build toward independence."
+          description="Learn valuable trade skills, launch a successful local business, and work toward financial independence."
+          visual={<TypeTileVisual top="San Diego County" glyph="→" bottom="Skills first / a local business in time" />}
+        />
       </section>
 
       <ContactSection />
@@ -277,7 +345,34 @@ export function FuturePage() {
   return (
     <PortfolioShell active="future">
       <SectionHeading eyebrow="Roadmap / 2024 onward" title="Future plan" description="A practical route from high school to a licensed trade business." />
-      <section className="future-objective portfolio-card" aria-labelledby="objective-title">
+      <div className="archive-meta">
+        <span>Roadmap / <strong>Four stages</strong></span>
+        <span>El Cajon → San Diego County</span>
+      </div>
+      <section className="archive-grid future-grid" aria-label="Four-phase execution plan">
+        {phases.map((phase, index) => (
+          <article className="archive-tile portfolio-card future-tile" key={phase.phase} data-testid={`card-phase-${index + 1}`} style={{ '--tile-index': index } as CSSProperties}>
+            <div className="tile-visual">
+              <div className="tile-text-visual" aria-hidden="true">
+                <span className="future-marker">0{index + 1}</span>
+                <span className="future-years">{phase.years}</span>
+                <div className="tile-text-top"><span>WD / ROADMAP</span><span>{phase.phase}</span></div>
+                <span className="tile-glyph">{['01', '02', '03', '04'][index]}</span>
+                <span className="tile-text-label">{phase.name}</span>
+              </div>
+              <div className="tile-caption">
+                <div className="tile-caption-copy">
+                  <small>{phase.phase} / {phase.name}</small>
+                  <h2>{phase.title}</h2>
+                  <ul className="goal-list">{phase.items.map((item) => <li key={item}>{item}</li>)}</ul>
+                </div>
+                <span className="tile-index">{String(index + 1).padStart(2, '0')}</span>
+              </div>
+            </div>
+          </article>
+        ))}
+      </section>
+      <section className="future-objective" aria-labelledby="objective-title">
         <div>
           <p className="portfolio-eyebrow">Primary business objective</p>
           <h2 id="objective-title">Launch a licensed HVAC &amp; contracting company.</h2>
@@ -285,7 +380,7 @@ export function FuturePage() {
         </div>
         <div className="objective-location"><span>Target location</span><strong>San Diego, CA</strong><small>Class of 2028 &amp; beyond</small></div>
       </section>
-      <section className="credential-row" aria-label="Planned qualifications">
+      <section className="credential-strip" aria-label="Planned qualifications">
         {[
           ['Specialty license', 'C-20 HVAC Contractor'],
           ['Key certification', 'EPA 608 Universal'],
@@ -296,18 +391,6 @@ export function FuturePage() {
             <span>{label}</span><strong>{value}</strong>
           </div>
         ))}
-      </section>
-      <section className="phases-section" aria-labelledby="phases-title">
-        <div className="phases-heading"><div><p className="portfolio-eyebrow">One step at a time</p><h2 id="phases-title">Four-phase execution plan</h2></div><span>04 STAGES</span></div>
-        <div className="phase-grid">
-          {phases.map((phase, index) => (
-            <article className={`phase-card${index === 3 ? ' phase-card-final' : ''}`} key={phase.phase} data-testid={`card-phase-${index + 1}`}>
-              <div className="phase-topline"><span>{phase.phase} <i aria-hidden="true">/</i> {phase.name}</span><span className="phase-years">{phase.years}</span></div>
-              <h3>{phase.title}</h3>
-              <ul>{phase.items.map((item) => <li key={item}><span className="phase-bullet" aria-hidden="true" />{item}</li>)}</ul>
-            </article>
-          ))}
-        </div>
       </section>
     </PortfolioShell>
   );
@@ -344,27 +427,33 @@ export function InterestsPage() {
   return (
     <PortfolioShell active="interests">
       <SectionHeading eyebrow="Off the clock / On the bench" title="Core technical interests" description="Key domains shaping my skills and career path." />
-      <section className="interest-grid" aria-label="Six interests">
+      <div className="archive-meta">
+        <span>Index / <strong>Six interests</strong></span>
+        <span>Practice / Recreation / Sound</span>
+      </div>
+      <section className="archive-grid page-grid" aria-label="Six interests">
         {interests.map((interest, index) => {
           const Icon = interest.icon;
           return (
-            <article className="interest-card portfolio-card" key={interest.title} data-testid={`card-interest-${index + 1}`}>
-              <div className="interest-card-heading">
-                <h2>{interest.title}</h2><span>0{index + 1}</span>
-              </div>
-              {interest.image ? (
-                <div className="interest-image">
-                  <img src={interest.image} alt={interest.alt} referrerPolicy="no-referrer" data-testid={`img-interest-${index + 1}`} />
+            <ArchiveTile
+              key={interest.title}
+              index={index}
+              className="interest-tile"
+              label={`Interest / 0${index + 1}`}
+              title={interest.title}
+              description={interest.description}
+              image={interest.image}
+              alt={interest.alt}
+              testId={`card-interest-${index + 1}`}
+              imageTestId={interest.image ? `img-interest-${index + 1}` : undefined}
+              visual={
+                <div className="tile-text-visual" aria-label={interest.imageLabel}>
+                  <div className="tile-text-top"><span>WD / FIELD NOTES</span><span>0{index + 1}</span></div>
+                  <Icon className="interest-glyph" size={72} strokeWidth={1} aria-hidden="true" />
+                  <span className="tile-text-label">{interest.imageLabel}</span>
                 </div>
-              ) : (
-                <div className="interest-placeholder" aria-label={interest.imageLabel}>
-                  <Icon size={24} strokeWidth={1.45} aria-hidden="true" />
-                  <span>{interest.imageLabel}</span>
-                  <small>Personal photo not added</small>
-                </div>
-              )}
-              <p>{interest.description}</p>
-            </article>
+              }
+            />
           );
         })}
       </section>
@@ -391,13 +480,27 @@ export function GoalsPage() {
   return (
     <PortfolioShell active="goals">
       <SectionHeading eyebrow="What comes next" title="Personal & professional goals" description="Short-term, mid-term, and long-term milestones." />
-      <section className="goals-grid" aria-label="Goals by timeframe">
+      <div className="archive-meta">
+        <span>Index / <strong>Three horizons</strong></span>
+        <span>Now / Next / Further ahead</span>
+      </div>
+      <section className="archive-grid goals-grid" aria-label="Goals by timeframe">
         {goals.map((goal, index) => (
-          <article className="goal-card portfolio-card" key={goal.period} data-testid={`card-goal-${index + 1}`}>
-            <span className="goal-period">0{index + 1} <i aria-hidden="true">/</i> {goal.period}</span>
-            <h2>{goal.title}</h2>
-            <ul>{goal.items.map((item) => <li key={item}><span aria-hidden="true">—</span>{item}</li>)}</ul>
-            <span className="goal-watermark" aria-hidden="true">0{index + 1}</span>
+          <article className="archive-tile portfolio-card goal-tile" key={goal.period} data-testid={`card-goal-${index + 1}`} style={{ '--tile-index': index } as CSSProperties}>
+            <div className="tile-visual">
+              <div className="tile-text-visual" aria-hidden="true">
+                <div className="tile-text-top"><span>WD / GOALS</span><span>0{index + 1}</span></div>
+                <span className="tile-glyph">{['01', '02', '03'][index]}</span>
+                <span className="tile-text-label">{goal.period} / time horizon</span>
+              </div>
+              <div className="tile-caption">
+                <div className="tile-caption-copy">
+                  <small>0{index + 1} / {goal.period}</small>
+                  <h2>{goal.title}</h2>
+                  <ul className="goal-list">{goal.items.map((item) => <li key={item}>{item}</li>)}</ul>
+                </div>
+              </div>
+            </div>
           </article>
         ))}
       </section>
