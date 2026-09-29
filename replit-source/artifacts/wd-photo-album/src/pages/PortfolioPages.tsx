@@ -1,29 +1,23 @@
-import { useEffect, useState, type CSSProperties, type FormEvent, type ReactNode } from 'react';
+import { useEffect, type CSSProperties, type ReactNode } from 'react';
 import { Link } from 'wouter';
 import {
-  ArrowDownRight,
   ArrowUpRight,
-  Building2,
-  Dumbbell,
-  Gamepad2,
-  Mail,
-  Mountain,
-  Music2,
-  Wrench,
 } from 'lucide-react';
+import { useUser } from '@clerk/react';
 import './PortfolioPages.css';
 
-type PortfolioPage = 'home' | 'media' | 'future' | 'interests' | 'goals';
+type PortfolioPage = 'home' | 'media' | 'future' | 'contact' | 'inbox' | 'goals';
 
 const navigation: { id: PortfolioPage; label: string; href: string }[] = [
   { id: 'home', label: 'Home', href: '/' },
   { id: 'media', label: 'Media', href: '/media' },
   { id: 'future', label: 'Future Plan', href: '/future' },
-  { id: 'interests', label: 'Interests', href: '/interests' },
+  { id: 'contact', label: 'Contact', href: '/contact' },
   { id: 'goals', label: 'Goals', href: '/goals' },
 ];
 
 export function PortfolioNav({ active }: { active: PortfolioPage }) {
+  const { isSignedIn } = useUser();
   return (
     <nav className="portfolio-nav" aria-label="Portfolio pages" data-testid="nav-portfolio">
       {navigation.map((item) => (
@@ -37,6 +31,7 @@ export function PortfolioNav({ active }: { active: PortfolioPage }) {
           {item.label}
         </Link>
       ))}
+      {isSignedIn && <Link href="/messages" className={`portfolio-nav-link${active === 'inbox' ? ' is-active' : ''}`} aria-current={active === 'inbox' ? 'page' : undefined} data-testid="link-portfolio-inbox">Inbox</Link>}
     </nav>
   );
 }
@@ -47,7 +42,8 @@ export function PortfolioHeader({ active }: { active: PortfolioPage }) {
       home: 'Abdul Alawad | Student & Trades Portfolio',
       media: 'WD Photos | Abdul Alawad',
       future: 'Future Plan | Abdul Alawad',
-      interests: 'Interests | Abdul Alawad',
+      contact: 'Contact | Abdul Alawad',
+      inbox: 'Messages | Abdul Alawad',
       goals: 'Goals | Abdul Alawad',
     };
     document.title = titles[active];
@@ -69,7 +65,7 @@ export function PortfolioHeader({ active }: { active: PortfolioPage }) {
   );
 }
 
-function PortfolioShell({
+export function PortfolioShell({
   active,
   children,
 }: {
@@ -159,96 +155,6 @@ function TypeTileVisual({ top, glyph, bottom }: { top: string; glyph: string; bo
   );
 }
 
-function ContactSection() {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [message, setMessage] = useState('');
-  const [mailtoHref, setMailtoHref] = useState('');
-
-  const prepareEmail = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const subject = `Portfolio message from ${name.trim()}`;
-    const body = `From: ${name.trim()} <${email.trim()}>\n\n${message.trim()}`;
-    setMailtoHref(
-      `mailto:abdulalawad80@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`,
-    );
-  };
-
-  return (
-    <section className="contact-section" id="contact-section" aria-labelledby="contact-title">
-      <div className="contact-copy">
-        <p className="portfolio-eyebrow">Open line</p>
-        <h2 id="contact-title">Get in touch</h2>
-        <p>Connect on Instagram or prepare a message in your email app.</p>
-        <div className="contact-links">
-          <a href="https://instagram.com/abdul1l1l1" target="_blank" rel="noreferrer" className="contact-link" data-testid="link-contact-instagram">
-            <span className="contact-link-mark" aria-hidden="true">IG</span>
-            <span><small>Instagram</small><strong>@abdul1l1l1</strong></span>
-            <ArrowUpRight size={15} aria-hidden="true" />
-          </a>
-          <a href="mailto:abdulalawad80@gmail.com" className="contact-link" data-testid="link-contact-email">
-            <span className="contact-link-mark" aria-hidden="true"><Mail size={15} /></span>
-            <span><small>Direct email</small><strong>abdulalawad80@gmail.com</strong></span>
-            <ArrowUpRight size={15} aria-hidden="true" />
-          </a>
-        </div>
-      </div>
-      <form className="portfolio-form" onSubmit={prepareEmail} data-testid="form-contact">
-        <div className="form-fields-row">
-          <label>
-            <span>Your name</span>
-            <input
-              value={name}
-              onChange={(event) => { setName(event.target.value); setMailtoHref(''); }}
-              placeholder="Name"
-              autoComplete="name"
-              required
-              maxLength={100}
-              data-testid="input-contact-name"
-            />
-          </label>
-          <label>
-            <span>Your email</span>
-            <input
-              type="email"
-              value={email}
-              onChange={(event) => { setEmail(event.target.value); setMailtoHref(''); }}
-              placeholder="you@example.com"
-              autoComplete="email"
-              required
-              maxLength={180}
-              data-testid="input-contact-email"
-            />
-          </label>
-        </div>
-        <label>
-          <span>Message</span>
-          <textarea
-            value={message}
-            onChange={(event) => { setMessage(event.target.value); setMailtoHref(''); }}
-            placeholder="What would you like to talk about?"
-            rows={4}
-            required
-            maxLength={2000}
-            data-testid="input-contact-message"
-          />
-        </label>
-        <button type="submit" className="portfolio-button" data-testid="button-prepare-email">
-          Prepare email <ArrowDownRight size={15} aria-hidden="true" />
-        </button>
-        {mailtoHref && (
-          <div className="mailto-handoff" role="status" data-testid="status-email-handoff">
-            <p>Your email app will open with these details. Review the message, then press Send there; nothing is sent from this site.</p>
-            <a href={mailtoHref} className="mailto-action" data-testid="link-open-email-app">
-              Open email app <ArrowUpRight size={14} aria-hidden="true" />
-            </a>
-          </div>
-        )}
-      </form>
-    </section>
-  );
-}
-
 export function HomePage() {
   return (
     <PortfolioShell active="home">
@@ -261,7 +167,7 @@ export function HomePage() {
         <span>Selected pages / <strong>Profile &amp; practice</strong></span>
         <div className="archive-quicklinks">
           <Link href="/media" data-testid="link-view-media">View media portfolio <ArrowUpRight size={13} aria-hidden="true" /></Link>
-          <Link href="/interests" data-testid="link-explore-interests">Explore interests <ArrowUpRight size={13} aria-hidden="true" /></Link>
+          <Link href="/contact" data-testid="link-home-contact">Get in touch <ArrowUpRight size={13} aria-hidden="true" /></Link>
         </div>
       </div>
       <section className="archive-grid home-grid" aria-label="Profile archive">
@@ -301,70 +207,35 @@ export function HomePage() {
         />
       </section>
 
-      <ContactSection />
     </PortfolioShell>
   );
 }
 
-const phases = [
-  {
-    phase: 'Phase 1', name: 'High school foundations', years: '2024 – 2028', title: 'Academic completion & trade prep',
-    items: [
-      'Graduate from Grossmont High School in El Cajon (Class of 2028).',
-      "Earn California Driver's License and acquire personal work transportation.",
-      'Gain hands-on experience in automotive repairs, custom fabrication, and building basics.',
-    ],
-  },
-  {
-    phase: 'Phase 2', name: 'Trade certification & apprenticeship', years: '2028 – 2030', title: 'Technical training & field experience',
-    items: [
-      'Enroll in HVAC Technology & Building Construction programs in San Diego.',
-      'Pass EPA Section 608 Universal Certification for handling all refrigerant types.',
-      'Accumulate 3,000+ journeyman hours under experienced licensed contractors.',
-    ],
-  },
-  {
-    phase: 'Phase 3', name: 'Contractor licensing', years: '2030 – 2031', title: 'California CSLB state licensing',
-    items: [
-      'Pass the CSLB C-20 Warm-Air Heating, Ventilating & Air-Conditioning Trade Exam.',
-      'Complete California Law & Business examination and OSHA 30 Construction safety.',
-      'Secure required contractor bonds, general liability insurance, and state compliance.',
-    ],
-  },
-  {
-    phase: 'Phase 4', name: 'Business launch & scaling', years: 'Ultimate milestone', title: 'San Diego enterprise operations',
-    items: [
-      'Register independent Contracting LLC in San Diego County.',
-      'Equip specialized service vehicles with modern diagnostic tools and equipment.',
-      'Build long-term residential and commercial service contracts across East County & San Diego.',
-    ],
-  },
-];
-
 export function FuturePage() {
   return (
     <PortfolioShell active="future">
-      <SectionHeading eyebrow="Roadmap / 2024 onward" title="Future plan" description="A practical route from high school to a licensed trade business." />
+      <SectionHeading eyebrow="Future plan / working direction" title="Two trades. One foundation." description="HVAC and construction are the path I want to keep learning through school, practice, and real work." />
       <div className="archive-meta">
-        <span>Roadmap / <strong>Four stages</strong></span>
-        <span>El Cajon → San Diego County</span>
+        <span>Focus / <strong>HVAC + construction</strong></span>
+        <span>Learn / Practice / Build</span>
       </div>
-      <section className="archive-grid future-grid" aria-label="Four-phase execution plan">
-        {phases.map((phase, index) => (
-          <article className="archive-tile portfolio-card future-tile" key={phase.phase} data-testid={`card-phase-${index + 1}`} style={{ '--tile-index': index } as CSSProperties}>
+      <section className="archive-grid future-grid simple-future-grid" aria-label="Future trade interests">
+        {[
+          { title: 'HVAC', label: 'Heating / ventilation / air conditioning', mark: 'HV', text: 'Understand how heating and cooling systems work, then build the skills to install, maintain, and repair them.' },
+          { title: 'Construction', label: 'Building / structure / craft', mark: '02', text: 'Learn the materials, tools, and techniques behind solid construction and careful project work.' },
+        ].map((plan, index) => (
+          <article className="archive-tile portfolio-card future-tile" key={plan.title} data-testid={`card-phase-${index + 1}`} style={{ '--tile-index': index } as CSSProperties}>
             <div className="tile-visual">
               <div className="tile-text-visual" aria-hidden="true">
-                <span className="future-marker">0{index + 1}</span>
-                <span className="future-years">{phase.years}</span>
-                <div className="tile-text-top"><span>WD / ROADMAP</span><span>{phase.phase}</span></div>
-                <span className="tile-glyph">{['01', '02', '03', '04'][index]}</span>
-                <span className="tile-text-label">{phase.name}</span>
+                <div className="tile-text-top"><span>WD / FIELD NOTES</span><span>0{index + 1}</span></div>
+                <span className="tile-glyph">{plan.mark}</span>
+                <span className="tile-text-label">{plan.label}</span>
               </div>
               <div className="tile-caption">
                 <div className="tile-caption-copy">
-                  <small>{phase.phase} / {phase.name}</small>
-                  <h2>{phase.title}</h2>
-                  <ul className="goal-list">{phase.items.map((item) => <li key={item}>{item}</li>)}</ul>
+                  <small>Area {String(index + 1).padStart(2, '0')} / Future focus</small>
+                  <h2>{plan.title}</h2>
+                  <p>{plan.text}</p>
                 </div>
                 <span className="tile-index">{String(index + 1).padStart(2, '0')}</span>
               </div>
@@ -374,88 +245,11 @@ export function FuturePage() {
       </section>
       <section className="future-objective" aria-labelledby="objective-title">
         <div>
-          <p className="portfolio-eyebrow">Primary business objective</p>
-          <h2 id="objective-title">Launch a licensed HVAC &amp; contracting company.</h2>
-          <p>Establishing a premier licensed general contracting and HVAC enterprise in San Diego County, specializing in residential remodeling, climate control installation, and modern trade solutions.</p>
+          <p className="portfolio-eyebrow">The next step</p>
+          <h2 id="objective-title">Learn the work before planning too far ahead.</h2>
+          <p>For now, the focus is a strong foundation in HVAC and construction: ask questions, practice safely, and keep improving.</p>
         </div>
-        <div className="objective-location"><span>Target location</span><strong>San Diego, CA</strong><small>Class of 2028 &amp; beyond</small></div>
-      </section>
-      <section className="credential-strip" aria-label="Planned qualifications">
-        {[
-          ['Specialty license', 'C-20 HVAC Contractor'],
-          ['Key certification', 'EPA 608 Universal'],
-          ['Safety standard', 'OSHA 30 Construction'],
-          ['Business model', 'Licensed Trade LLC'],
-        ].map(([label, value], index) => (
-          <div className="credential" key={label} data-testid={`card-credential-${index + 1}`}>
-            <span>{label}</span><strong>{value}</strong>
-          </div>
-        ))}
-      </section>
-    </PortfolioShell>
-  );
-}
-
-const interests = [
-  {
-    title: 'Automotive Mechanics', icon: Wrench, imageLabel: 'Automotive / workshop notes',
-    description: 'Passionate about engine performance, hands-on mechanical repairs, and maintaining Ford Mustangs.',
-  },
-  {
-    title: 'Building & Contracting', icon: Building2, image: 'https://i.imgur.com/dWNlfjN.jpeg',
-    alt: 'Custom made Coastal Florida getaway', description: 'Custom made Coastal Florida getaway.',
-  },
-  {
-    title: 'Working Out', icon: Dumbbell, imageLabel: 'Training / fitness notes',
-    description: 'Dedicated to weight training, physical fitness, discipline, and maintaining peak athletic conditioning.',
-  },
-  {
-    title: 'Tactical Gaming', icon: Gamepad2, imageLabel: 'Team play / strategy notes',
-    description: 'Competitive multiplayer gaming, tactical communication, and team strategy.',
-  },
-  {
-    title: 'Outdoors & Recreation', icon: Mountain, imageLabel: 'San Diego County / trail notes',
-    description: 'Exploring local hiking trails and outdoor scenery across San Diego County.',
-  },
-  {
-    title: 'Listening to Music', icon: Music2, image: 'https://i.imgur.com/QiJSNli.jpeg',
-    alt: 'Music and audio tracks', description: 'Streaming favorite hip-hop, rap, and high-energy tracks while working out or focusing on hands-on building projects.',
-  },
-];
-
-export function InterestsPage() {
-  return (
-    <PortfolioShell active="interests">
-      <SectionHeading eyebrow="Off the clock / On the bench" title="Core technical interests" description="Key domains shaping my skills and career path." />
-      <div className="archive-meta">
-        <span>Index / <strong>Six interests</strong></span>
-        <span>Practice / Recreation / Sound</span>
-      </div>
-      <section className="archive-grid page-grid" aria-label="Six interests">
-        {interests.map((interest, index) => {
-          const Icon = interest.icon;
-          return (
-            <ArchiveTile
-              key={interest.title}
-              index={index}
-              className="interest-tile"
-              label={`Interest / 0${index + 1}`}
-              title={interest.title}
-              description={interest.description}
-              image={interest.image}
-              alt={interest.alt}
-              testId={`card-interest-${index + 1}`}
-              imageTestId={interest.image ? `img-interest-${index + 1}` : undefined}
-              visual={
-                <div className="tile-text-visual" aria-label={interest.imageLabel}>
-                  <div className="tile-text-top"><span>WD / FIELD NOTES</span><span>0{index + 1}</span></div>
-                  <Icon className="interest-glyph" size={72} strokeWidth={1} aria-hidden="true" />
-                  <span className="tile-text-label">{interest.imageLabel}</span>
-                </div>
-              }
-            />
-          );
-        })}
+        <div className="objective-location"><span>Approach</span><strong>Hands-on learning</strong><small>One skill at a time</small></div>
       </section>
     </PortfolioShell>
   );

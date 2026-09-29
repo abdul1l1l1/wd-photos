@@ -6,7 +6,8 @@ import { TooltipProvider } from '@/components/ui/tooltip';
 import { ImagePlus, Pencil, Upload, X, ArrowLeft } from 'lucide-react';
 import { Route, Switch, useLocation, useParams, Router as WouterRouter, Link } from 'wouter';
 import NotFound from '@/pages/not-found';
-import { HomePage, FuturePage, InterestsPage, GoalsPage, PortfolioHeader } from '@/pages/PortfolioPages';
+import { HomePage, FuturePage, GoalsPage, PortfolioHeader } from '@/pages/PortfolioPages';
+import { ContactPage, MessagesPage, VisitorConversationPage } from '@/pages/ContactPages';
 
 import { useGetAlbum, useSyncAlbum, getGetAlbumQueryKey } from '@workspace/api-client-react';
 import { ClerkProvider, SignIn, SignUp, useUser, useClerk, ClerkLoaded } from '@clerk/react';
@@ -669,6 +670,14 @@ function RoutedErrorBoundary({ children }: { children: ReactNode }) {
   return <ErrorBoundary resetKey={location}>{children}</ErrorBoundary>;
 }
 
+function LegacyInterestsRedirect() {
+  const [, setLocation] = useLocation();
+  useEffect(() => {
+    setLocation('/contact', { replace: true });
+  }, [setLocation]);
+  return null;
+}
+
 function ClerkQueryClientCacheInvalidator() {
   const { addListener } = useClerk();
   const queryClient = useQueryClient();
@@ -734,7 +743,10 @@ function ClerkProviderWithRoutes() {
               <Route path="/" component={HomePage} />
               <Route path="/media" component={MediaAlbum} />
               <Route path="/future" component={FuturePage} />
-              <Route path="/interests" component={InterestsPage} />
+              <Route path="/contact" component={ContactPage} />
+              <Route path="/interests" component={LegacyInterestsRedirect} />
+              <Route path="/messages" component={MessagesPage} />
+              <Route path="/conversation/:token" component={VisitorConversationPage} />
               <Route path="/goals" component={GoalsPage} />
               <Route path="/photo/:id" component={PhotoDetail} />
               <Route path="/sign-in/*?" component={SignInPage} />

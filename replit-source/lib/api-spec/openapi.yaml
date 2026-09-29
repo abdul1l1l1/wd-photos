@@ -12,6 +12,8 @@ tags:
     description: Health operations
   - name: album
     description: WD Photo album synchronization
+  - name: messages
+    description: Private portfolio conversations
 paths:
   /healthz:
     get:
@@ -67,8 +69,138 @@ paths:
           description: Only the album owner can save
         "502":
           description: GitHub could not be updated
+  /messages:
+    get:
+      operationId: listMessages
+      tags: [messages]
+      summary: List conversations for the album owner
+      responses:
+        "200":
+          description: Conversations
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/OwnerConversation"
+        "401":
+          description: Sign-in required
+        "403":
+          description: Owner access required
+    post:
+      operationId: createMessage
+      tags: [messages]
+      summary: Start a private conversation
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MessageInput"
+      responses:
+        "201":
+          description: Conversation created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CreatedConversation"
+        "400":
+          description: Invalid input
+  /messages/{id}/replies:
+    post:
+      operationId: replyToMessage
+      tags: [messages]
+      summary: Reply as the owner
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string, format: uuid }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ReplyInput"
+      responses:
+        "201":
+          description: Reply saved
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ConversationReply"
+        "400":
+          description: Invalid reply
+        "401":
+          description: Sign-in required
+        "403":
+          description: Owner access required
+        "404":
+          description: Conversation not found
+  /conversations/{token}:
+    get:
+      operationId: getConversation
+      tags: [messages]
+      summary: Read a private conversation by its link token
+      parameters:
+        - in: path
+          name: token
+          required: true
+          schema: { type: string, minLength: 40, maxLength: 100 }
+      responses:
+        "200":
+          description: Conversation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/VisitorConversation"
+        "404":
+          description: Conversation not found
 components:
   schemas:
+    MessageInput:
+      type: object
+      required: [name, email, body]
+      properties:
+        name: { type: string, minLength: 1, maxLength: 100 }
+        email: { type: string, format: email, maxLength: 180 }
+        body: { type: string, minLength: 1, maxLength: 2000 }
+    ReplyInput:
+      type: object
+      required: [body]
+      properties:
+        body: { type: string, minLength: 1, maxLength: 2000 }
+    ConversationReply:
+      type: object
+      required: [id, body, createdAt]
+      properties:
+        id: { type: string, format: uuid }
+        body: { type: string }
+        createdAt: { type: string, format: date-time }
+    CreatedConversation:
+      type: object
+      required: [id, token]
+      properties:
+        id: { type: string, format: uuid }
+        token: { type: string }
+    VisitorConversation:
+      type: object
+      required: [name, body, createdAt, replies]
+      properties:
+        name: { type: string }
+        body: { type: string }
+        createdAt: { type: string, format: date-time }
+        replies:
+          type: array
+          items: { $ref: "#/components/schemas/ConversationReply" }
+    OwnerConversation:
+      allOf:
+        - $ref: "#/components/schemas/VisitorConversation"
+        - type: object
+          required: [id, email]
+          properties:
+            id: { type: string, format: uuid }
+            email: { type: string, format: email }
     HealthStatus:
       type: object
       properties:
