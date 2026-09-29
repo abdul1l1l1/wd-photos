@@ -6,12 +6,12 @@
   --portfolio-text: #edeade;
   --portfolio-muted: #aaa99e;
   --portfolio-dim: #85847b;
-  --portfolio-accent: #d7ff62;
+  --portfolio-accent: #e7a06d;
   min-height: 100dvh;
   display: flex;
   flex-direction: column;
   color: var(--portfolio-text);
-  background: radial-gradient(ellipse at 50% -34%, rgba(215, 255, 98, .045), transparent 43rem), var(--portfolio-bg);
+  background: radial-gradient(ellipse at 50% -34%, rgba(231, 160, 109, .045), transparent 43rem), var(--portfolio-bg);
   font-family: var(--app-font-sans, "Space Grotesk", sans-serif);
   -webkit-font-smoothing: antialiased;
 }
@@ -26,7 +26,7 @@
   position: sticky; z-index: 10; top: 0; border-bottom: 1px solid rgba(237,234,222,.14);
   background: rgba(8,8,8,.94); backdrop-filter: blur(16px);
 }
-.portfolio-media-header { --portfolio-accent: #d7ff62; --portfolio-text: #edeade; --portfolio-dim: #85847b; position: relative; z-index: 2; top: auto; color: #edeade; border-bottom-color: rgba(237,234,222,.14); background: #080808; backdrop-filter: none; }
+.portfolio-media-header { --portfolio-accent: #e7a06d; --portfolio-text: #edeade; --portfolio-dim: #85847b; position: relative; z-index: 2; top: auto; color: #edeade; border-bottom-color: rgba(237,234,222,.14); background: #080808; backdrop-filter: none; }
 .portfolio-header-inner {
   width: min(1360px, calc(100% - 48px)); min-height: 68px; margin: 0 auto;
   display: flex; justify-content: space-between; align-items: center; gap: 25px;
@@ -86,11 +86,11 @@
 .tile-index { flex: 0 0 auto; color: rgba(237,234,222,.7); font: 10px var(--app-font-mono, monospace); }
 .tile-text-visual {
   position: relative; display: flex; width: 100%; height: 100%; flex-direction: column; justify-content: space-between; padding: 24px;
-  overflow: hidden; isolation: isolate; background: radial-gradient(ellipse at 68% 18%, rgba(215,255,98,.09), transparent 52%), #141412;
+  overflow: hidden; isolation: isolate; background: radial-gradient(ellipse at 68% 18%, rgba(231,160,109,.09), transparent 52%), #141412;
 }
 .tile-text-visual::before, .tile-text-visual::after { position: absolute; z-index: -1; content: ""; pointer-events: none; }
 .tile-text-visual::before { inset: 12%; border: 1px solid rgba(237,234,222,.13); transform: rotate(-8deg); }
-.tile-text-visual::after { width: 65%; aspect-ratio: 1; right: -14%; bottom: -35%; border: 1px solid rgba(215,255,98,.27); border-radius: 50%; }
+.tile-text-visual::after { width: 65%; aspect-ratio: 1; right: -14%; bottom: -35%; border: 1px solid rgba(231,160,109,.27); border-radius: 50%; }
 .tile-text-top { position: absolute; top: 24px; right: 24px; left: 24px; display: flex; justify-content: space-between; gap: 12px; color: var(--portfolio-dim); font: 9px var(--app-font-mono, monospace); letter-spacing: .08em; text-transform: uppercase; }
 .tile-glyph { position: absolute; top: 31%; left: 24px; transform: translateY(-50%); color: var(--portfolio-accent); font-size: clamp(52px, 8vw, 100px); font-weight: 500; letter-spacing: -.1em; line-height: .8; }
 .tile-text-label { position: absolute; top: 49px; right: 24px; left: 24px; max-width: 300px; color: var(--portfolio-muted); font: 10px var(--app-font-mono, monospace); letter-spacing: .06em; line-height: 1.6; text-transform: uppercase; }
@@ -158,8 +158,8 @@
 .portfolio-form input:focus, .portfolio-form textarea:focus { border-color: var(--portfolio-accent); background: #151513; outline: 0; }
 .portfolio-form textarea { min-height: 112px; resize: vertical; line-height: 1.55; }
 .portfolio-button { display: inline-flex; min-height: 43px; align-items: center; justify-content: center; gap: 9px; justify-self: start; padding: 0 15px; border: 1px solid var(--portfolio-accent); color: #080808; background: var(--portfolio-accent); font: 10px var(--app-font-mono, monospace); letter-spacing: .045em; text-transform: uppercase; cursor: pointer; transition: background-color .18s ease, transform .18s ease; }
-.portfolio-button:hover { transform: translateY(-2px); background: #e6ff91; }
-.mailto-handoff { padding: 14px; border: 1px solid rgba(215,255,98,.4); background: rgba(215,255,98,.045); }
+.portfolio-button:hover { transform: translateY(-2px); background: #f0b68c; }
+.mailto-handoff { padding: 14px; border: 1px solid rgba(231,160,109,.4); background: rgba(231,160,109,.045); }
 .mailto-handoff p { margin: 0 0 8px; color: #c4c2b5; font-size: 11px; line-height: 1.65; }
 .portfolio-footer { width: min(1360px, calc(100% - 48px)); margin: 0 auto; padding: 21px 0 26px; border-top: 1px solid var(--portfolio-border); display: flex; justify-content: space-between; align-items: center; gap: 20px; color: var(--portfolio-dim); font: 9px var(--app-font-mono, monospace); letter-spacing: .055em; text-transform: uppercase; }
 .portfolio-footer p { margin: 0; }
@@ -286,7 +286,7 @@
 .thread-record time { color: var(--portfolio-dim); font: 9px var(--app-font-mono, monospace); }
 .thread-email { color: var(--portfolio-muted) !important; font: 10px var(--app-font-mono, monospace); overflow-wrap: anywhere; }
 .thread-message { padding: 22px 20px 25px; color: var(--portfolio-text); font-size: 14px; line-height: 1.8; white-space: pre-wrap; overflow-wrap: anywhere; }
-.thread-reply { margin: 0 20px 19px; padding: 17px 18px; border-left: 2px solid var(--portfolio-accent); background: rgba(215,255,98,.035); }
+.thread-reply { margin: 0 20px 19px; padding: 17px 18px; border-left: 2px solid var(--portfolio-accent); background: rgba(231,160,109,.035); }
 .thread-reply .thread-label { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
 .thread-reply p { margin: 12px 0 0; color: #d0cfc5; font-size: 13px; line-height: 1.75; white-space: pre-wrap; overflow-wrap: anywhere; }
 .reply-form { display: grid; gap: 10px; padding: 18px 20px 20px; border-top: 1px solid var(--portfolio-border); }

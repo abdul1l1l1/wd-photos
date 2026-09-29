@@ -6,7 +6,7 @@ import { TooltipProvider } from '@/components/ui/tooltip';
 import { ImagePlus, Pencil, Upload, X, ArrowLeft } from 'lucide-react';
 import { Route, Switch, useLocation, useParams, Router as WouterRouter, Link } from 'wouter';
 import NotFound from '@/pages/not-found';
-import { HomePage, FuturePage, GoalsPage, PortfolioHeader } from '@/pages/PortfolioPages';
+import { HomePage, FuturePage, GoalsPage, PortfolioHeader, TradeDetailPage } from '@/pages/PortfolioPages';
 import { ContactPage, MessagesPage, VisitorConversationPage } from '@/pages/ContactPages';
 
 import { useGetAlbum, useSyncAlbum, getGetAlbumQueryKey } from '@workspace/api-client-react';
@@ -606,7 +606,7 @@ const clerkAppearance = {
     logoLinkUrl: basePath || "/",
   },
   variables: {
-    colorPrimary: "hsl(72 100% 64%)",
+    colorPrimary: "#e7a06d",
     colorForeground: "#edeade",
     colorMutedForeground: "#85847b",
     colorDanger: "hsl(0 74% 60%)",
@@ -626,16 +626,16 @@ const clerkAppearance = {
     headerSubtitle: "text-[#85847b]",
     socialButtonsBlockButtonText: "text-[#edeade] font-medium tracking-wide",
     formFieldLabel: "text-[#929188] uppercase tracking-widest text-[10px] font-mono",
-    footerActionLink: "text-[#d7ff62] hover:text-[#e6ff91]",
+    footerActionLink: "text-[#e7a06d] hover:text-[#f0b68c]",
     footerActionText: "text-[#85847b]",
     dividerText: "text-[#85847b]",
-    identityPreviewEditButton: "text-[#d7ff62]",
-    formFieldSuccessText: "text-[#d7ff62]",
+    identityPreviewEditButton: "text-[#e7a06d]",
+    formFieldSuccessText: "text-[#e7a06d]",
     alertText: "text-[#edeade]",
     logoBox: "flex justify-center mb-4 hidden",
     socialButtonsBlockButton: "border border-[#33332f] bg-[#191919] hover:bg-[#20201f] text-[#edeade]",
-    formButtonPrimary: "bg-[#d7ff62] text-[#080808] hover:bg-[#e6ff91] font-medium transition-all",
-    formFieldInput: "bg-[#191919] border border-[#33332f] text-[#edeade] rounded-md focus:border-[#d7ff62] focus:ring-0",
+    formButtonPrimary: "bg-[#e7a06d] text-[#080808] hover:bg-[#f0b68c] font-medium transition-all",
+    formFieldInput: "bg-[#191919] border border-[#33332f] text-[#edeade] rounded-md focus:border-[#e7a06d] focus:ring-0",
     footerAction: "bg-transparent",
     dividerLine: "bg-[#33332f]",
     alert: "bg-[#191919] border border-[#33332f]",
@@ -743,6 +743,8 @@ function ClerkProviderWithRoutes() {
               <Route path="/" component={HomePage} />
               <Route path="/media" component={MediaAlbum} />
               <Route path="/future" component={FuturePage} />
+              <Route path="/trade/hvac"><TradeDetailPage trade="hvac" /></Route>
+              <Route path="/trade/construction"><TradeDetailPage trade="construction" /></Route>
               <Route path="/contact" component={ContactPage} />
               <Route path="/interests" component={LegacyInterestsRedirect} />
               <Route path="/messages" component={MessagesPage} />
