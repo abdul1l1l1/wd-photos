@@ -252,6 +252,8 @@
 .home-grid .tile-wide { grid-column: span 3; }
 .home-grid .tile-profile-note { grid-column: span 2; }
 .home-grid .tile-portrait .tile-visual { min-height: 100%; }
+.home-grid .tile-wide .tile-glyph { top: 53%; }
+.home-grid .tile-profile-note .tile-glyph { top: 56%; }
 .simple-future-grid .future-tile .tile-visual { aspect-ratio: 1.2 / 1; }
 .simple-future-grid .tile-caption { min-height: 135px; }
 .contact-meta { margin-bottom: 7px; }
