@@ -12,14 +12,13 @@ import './PortfolioPages.css';
 import './HomeRefresh.css';
 import './TradeDetail.css';
 
-type PortfolioPage = 'home' | 'media' | 'future' | 'contact' | 'inbox' | 'goals';
+type PortfolioPage = 'home' | 'media' | 'future' | 'contact' | 'inbox';
 
 const navigation: { id: PortfolioPage; label: string; href: string }[] = [
   { id: 'home', label: 'Home', href: '/' },
   { id: 'media', label: 'Media', href: '/media' },
   { id: 'future', label: 'Future Plan', href: '/future' },
   { id: 'contact', label: 'Contact', href: '/contact' },
-  { id: 'goals', label: 'Goals', href: '/goals' },
 ];
 
 export function PortfolioNav({ active }: { active: PortfolioPage }) {
@@ -51,7 +50,6 @@ export function PortfolioHeader({ active }: { active: PortfolioPage }) {
       future: 'Future Plan | Abdul Alawad',
       contact: 'Contact | Abdul Alawad',
       inbox: 'Messages | Abdul Alawad',
-      goals: 'Goals | Abdul Alawad',
     };
     document.title = pathname === '/trade/hvac'
       ? 'HVAC Field Note | Abdul Alawad'
@@ -182,7 +180,7 @@ export function HomePage() {
             <p className="learning-deck">I’m interested in how things fit together—from the structure of a building to the systems that keep it running.</p>
           </div>
           <div className="learning-grid">
-            <Link href="/trade/construction" className="learning-card learning-card-feature trade-photo-card" data-testid="link-trade-construction-home" aria-label="Read the construction trade field note">
+            <Link href="/trade/construction" className="learning-card trade-photo-card" data-testid="link-trade-construction-home" aria-label="Read the construction trade field note">
               <div className="learning-card-art trade-photo-art">
                 <img src={`${import.meta.env.BASE_URL}images/trades/construction-framing.jpg`} alt="Wood wall framing taking shape, with evenly spaced studs forming the structure of a building." />
                 <span className="art-index">FIELD NOTE / 01</span><span className="art-word">BUILD</span>
@@ -206,14 +204,6 @@ export function HomePage() {
                 <span className="card-link">Read the HVAC field note <ArrowUpRight size={14} aria-hidden="true" /></span>
               </div>
             </Link>
-            <article className="learning-card">
-              <div className="learning-card-art learning-card-auto" aria-hidden="true"><span className="art-index">FIELD NOTE / 03</span><span className="auto-mark">4<span>×</span>4</span><span className="art-word">MACHINES</span><div className="auto-track"><i /><i /><i /><i /></div></div>
-              <div className="learning-card-copy">
-                <div className="card-title-row"><span>03</span><h3>Automotive</h3></div>
-                <p>Automotive mechanics and tuning—learning what’s under the hood, not just how it looks.</p>
-                <Link href="/media" className="card-link" data-testid="link-automotive-media">Browse the media archive <ArrowUpRight size={14} aria-hidden="true" /></Link>
-              </div>
-            </article>
           </div>
         </section>
 
@@ -232,8 +222,7 @@ export function HomePage() {
           <div className="archive-link-list">
             <Link className="archive-link" href="/media" data-testid="link-home-media"><span className="archive-link-index">01</span><span className="archive-link-copy"><strong>Media</strong><small>Photos and visual notes</small></span><ArrowUpRight size={18} aria-hidden="true" /></Link>
             <Link className="archive-link" href="/future" data-testid="link-home-future"><span className="archive-link-index">02</span><span className="archive-link-copy"><strong>Future Plan</strong><small>Trades I want to learn</small></span><ArrowUpRight size={18} aria-hidden="true" /></Link>
-            <Link className="archive-link" href="/goals" data-testid="link-home-goals"><span className="archive-link-index">03</span><span className="archive-link-copy"><strong>Goals</strong><small>Now, next, and further ahead</small></span><ArrowUpRight size={18} aria-hidden="true" /></Link>
-            <Link className="archive-link" href="/contact" data-testid="link-home-contact"><span className="archive-link-index">04</span><span className="archive-link-copy"><strong>Contact</strong><small>Get in touch</small></span><ArrowUpRight size={18} aria-hidden="true" /></Link>
+            <Link className="archive-link" href="/contact" data-testid="link-home-contact"><span className="archive-link-index">03</span><span className="archive-link-copy"><strong>Contact</strong><small>Get in touch</small></span><ArrowUpRight size={18} aria-hidden="true" /></Link>
           </div>
         </section>
 
@@ -414,58 +403,6 @@ export function TradeDetailPage({ trade }: { trade: TradeKind }) {
           <Link href={`/trade/${detail.other}`} className="trade-next-link"><span>ANOTHER FIELD NOTE / {other.number}</span><strong>{other.title}</strong><ArrowUpRight size={17} aria-hidden="true" /></Link>
         </nav>
       </article>
-    </PortfolioShell>
-  );
-}
-
-const goals = [
-  {
-    period: 'Short-term', title: "Driver's license & savings",
-    items: ["Pass CA driver's permit written exam", 'Start a part-time job in El Cajon', 'Acquire a Ford Mustang'],
-  },
-  {
-    period: 'Mid-term', title: 'Trade certification',
-    items: ['Graduate Grossmont High (2028)', 'Complete Trade School program', 'Earn EPA 608 Universal Certificate'],
-  },
-  {
-    period: 'Long-term', title: 'Licensed business owner',
-    items: ['Pass C-20 HVAC Contractor Exam', 'Launch Contracting LLC in San Diego', 'Build full-time employment independence'],
-  },
-];
-
-export function GoalsPage() {
-  return (
-    <PortfolioShell active="goals">
-      <SectionHeading eyebrow="What comes next" title="Personal & professional goals" description="Short-term, mid-term, and long-term milestones." />
-      <div className="archive-meta">
-        <span>Index / <strong>Three horizons</strong></span>
-        <span>Now / Next / Further ahead</span>
-      </div>
-      <section className="archive-grid goals-grid" aria-label="Goals by timeframe">
-        {goals.map((goal, index) => (
-          <article className="archive-tile portfolio-card goal-tile" key={goal.period} data-testid={`card-goal-${index + 1}`} style={{ '--tile-index': index } as CSSProperties}>
-            <div className="tile-visual">
-              <div className="tile-text-visual" aria-hidden="true">
-                <div className="tile-text-top"><span>WD / GOALS</span><span>0{index + 1}</span></div>
-                <span className="tile-glyph">{['01', '02', '03'][index]}</span>
-                <span className="tile-text-label">{goal.period} / time horizon</span>
-              </div>
-              <div className="tile-caption">
-                <div className="tile-caption-copy">
-                  <small>0{index + 1} / {goal.period}</small>
-                  <h2>{goal.title}</h2>
-                  <ul className="goal-list">{goal.items.map((item) => <li key={item}>{item}</li>)}</ul>
-                </div>
-              </div>
-            </div>
-          </article>
-        ))}
-      </section>
-      <div className="goals-note">
-        <span className="portfolio-eyebrow">The direction</span>
-        <p>Learn the work, earn the credentials, then build something of my own in San Diego.</p>
-        <Link href="/future" className="text-link" data-testid="link-goals-roadmap">See the full roadmap <ArrowUpRight size={14} aria-hidden="true" /></Link>
-      </div>
     </PortfolioShell>
   );
 }

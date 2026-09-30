@@ -6,7 +6,7 @@ import { TooltipProvider } from '@/components/ui/tooltip';
 import { ImagePlus, Pencil, Upload, X, ArrowLeft } from 'lucide-react';
 import { Route, Switch, useLocation, useParams, Router as WouterRouter, Link } from 'wouter';
 import NotFound from '@/pages/not-found';
-import { HomePage, FuturePage, GoalsPage, PortfolioHeader, TradeDetailPage } from '@/pages/PortfolioPages';
+import { HomePage, FuturePage, PortfolioHeader, TradeDetailPage } from '@/pages/PortfolioPages';
 import { ContactPage, MessagesPage, VisitorConversationPage } from '@/pages/ContactPages';
 
 import { useGetAlbum, useSyncAlbum, getGetAlbumQueryKey } from '@workspace/api-client-react';
@@ -749,7 +749,6 @@ function ClerkProviderWithRoutes() {
               <Route path="/interests" component={LegacyInterestsRedirect} />
               <Route path="/messages" component={MessagesPage} />
               <Route path="/conversation/:token" component={VisitorConversationPage} />
-              <Route path="/goals" component={GoalsPage} />
               <Route path="/photo/:id" component={PhotoDetail} />
               <Route path="/sign-in/*?" component={SignInPage} />
               <Route path="/sign-up/*?" component={SignUpPage} />
