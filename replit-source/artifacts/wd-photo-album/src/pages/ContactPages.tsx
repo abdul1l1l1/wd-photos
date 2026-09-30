@@ -146,25 +146,25 @@ export function MessagesPage() {
     query: { enabled: isLoaded && !!isSignedIn, queryKey: getListMessagesQueryKey() },
   });
 
-  const refreshInbox = () => {
+  const refreshArchive = () => {
     void queryClient.invalidateQueries({ queryKey: getListMessagesQueryKey() });
   };
 
   return (
-    <PortfolioShell active="inbox">
-      <PageIntro eyebrow="Owner archive / Correspondence" title="Messages." copy="Private notes sent through the contact page, with replies delivered through each visitor's conversation link." />
-      <div className="archive-meta"><span>Inbox / <strong>Owner only</strong></span><span>Replies stay on the visitor link</span></div>
+    <PortfolioShell active="archive">
+      <PageIntro eyebrow="Owner only / Correspondence" title="Message archive." copy="Every message sent through Contact is saved here, newest first. Open this page any time to read and reply." />
+      <div className="archive-meta"><span>Received messages / <strong>Owner only</strong></span><span>{isSignedIn && conversations ? `${conversations.length} saved conversation${conversations.length === 1 ? '' : 's'}` : 'Replies stay on the visitor link'}</span></div>
       {!isLoaded ? <div className="message-skeleton" aria-label="Loading account"><i /><i /><i /></div> : !isSignedIn ? (
-        <section className="private-gate"><LockKeyhole size={18} aria-hidden="true" /><h2>Owner sign-in required.</h2><p>This inbox is private. Sign in with the owner account to continue.</p><Link className="portfolio-button" href="/sign-in" data-testid="link-inbox-sign-in">Owner sign in <ArrowUpRight size={14} aria-hidden="true" /></Link></section>
+        <section className="private-gate"><LockKeyhole size={18} aria-hidden="true" /><h2>Owner sign-in required.</h2><p>This archive is private. Sign in with the owner account to view received messages.</p><Link className="portfolio-button" href="/sign-in" data-testid="link-archive-sign-in">Owner sign in <ArrowUpRight size={14} aria-hidden="true" /></Link></section>
       ) : isLoading ? (
         <div className="message-skeleton" aria-label="Loading messages"><i /><i /><i /></div>
       ) : isError ? (
-        <section className="inbox-state" role="alert"><p className="portfolio-eyebrow">Inbox unavailable</p><h2>Messages could not be loaded.</h2><p>{errorCopy(error)}</p><button className="portfolio-button" onClick={() => void refetch()} type="button" data-testid="button-retry-inbox">Try again</button></section>
+        <section className="inbox-state" role="alert"><p className="portfolio-eyebrow">Archive unavailable</p><h2>Messages could not be loaded.</h2><p>{errorCopy(error)}</p><button className="portfolio-button" onClick={() => void refetch()} type="button" data-testid="button-retry-archive">Try again</button></section>
       ) : !conversations?.length ? (
-        <section className="inbox-state inbox-empty"><p className="portfolio-eyebrow">No correspondence yet</p><h2>The archive is quiet.</h2><p>New notes sent from Contact will appear here.</p><Link href="/contact" className="text-link" data-testid="link-inbox-contact">View contact page <ArrowUpRight size={14} aria-hidden="true" /></Link></section>
+        <section className="inbox-state inbox-empty"><p className="portfolio-eyebrow">No correspondence yet</p><h2>The archive is quiet.</h2><p>New notes sent from Contact will be saved here automatically.</p><Link href="/contact" className="text-link" data-testid="link-archive-contact">View contact page <ArrowUpRight size={14} aria-hidden="true" /></Link></section>
       ) : (
-        <section className="conversation-list" aria-label="Private messages">
-          {conversations.map((conversation) => <ConversationThread key={conversation.id} conversation={conversation} owner onReplied={refreshInbox} />)}
+        <section className="conversation-list" aria-label="Received message archive">
+          {conversations.map((conversation) => <ConversationThread key={conversation.id} conversation={conversation} owner onReplied={refreshArchive} />)}
         </section>
       )}
     </PortfolioShell>

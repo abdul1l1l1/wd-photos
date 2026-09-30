@@ -7,22 +7,21 @@ import {
   Compass,
   MapPin,
 } from 'lucide-react';
-import { useUser } from '@clerk/react';
 import './PortfolioPages.css';
 import './HomeRefresh.css';
 import './TradeDetail.css';
 
-type PortfolioPage = 'home' | 'media' | 'future' | 'contact' | 'inbox';
+type PortfolioPage = 'home' | 'media' | 'future' | 'contact' | 'archive';
 
 const navigation: { id: PortfolioPage; label: string; href: string }[] = [
   { id: 'home', label: 'Home', href: '/' },
   { id: 'media', label: 'Media', href: '/media' },
   { id: 'future', label: 'Future Plan', href: '/future' },
   { id: 'contact', label: 'Contact', href: '/contact' },
+  { id: 'archive', label: 'Archive', href: '/messages' },
 ];
 
 export function PortfolioNav({ active }: { active: PortfolioPage }) {
-  const { isSignedIn } = useUser();
   return (
     <nav className="portfolio-nav" aria-label="Portfolio pages" data-testid="nav-portfolio">
       {navigation.map((item) => (
@@ -36,7 +35,6 @@ export function PortfolioNav({ active }: { active: PortfolioPage }) {
           {item.label}
         </Link>
       ))}
-      {isSignedIn && <Link href="/messages" className={`portfolio-nav-link${active === 'inbox' ? ' is-active' : ''}`} aria-current={active === 'inbox' ? 'page' : undefined} data-testid="link-portfolio-inbox">Inbox</Link>}
     </nav>
   );
 }
@@ -49,7 +47,7 @@ export function PortfolioHeader({ active }: { active: PortfolioPage }) {
       media: 'WD Photos | Abdul Alawad',
       future: 'Future Plan | Abdul Alawad',
       contact: 'Contact | Abdul Alawad',
-      inbox: 'Messages | Abdul Alawad',
+      archive: 'Message Archive | Abdul Alawad',
     };
     document.title = pathname === '/trade/hvac'
       ? 'HVAC Field Note | Abdul Alawad'
